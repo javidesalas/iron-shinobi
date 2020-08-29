@@ -33,10 +33,19 @@ const shinobiApp = {
             this.mapX++
             frames++
             this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
+            this.movement()
             this.draw()
             this.setEventListeners()
+            
         }, 30)
     },
+    movement() {
+        this.player.playerPos.x += this.player.playerSpeedX
+        this.player.playerPos.y += this.player.playerSpeedY
+
+        //this.player.playerSpeedY+= 1.5
+    },
+
     draw() {
         //background
         this.ctx.fillStyle = 'grey'
@@ -54,10 +63,17 @@ const shinobiApp = {
     }, // KEYCODES
     setEventListeners() {
         document.onkeydown = e => {
-            e.keyCode === 37 ? this.move(-1) : null
-            e.keyCode === 39 ? this.move(+1) : null
-            if (jump == 0)
-                e.keyCode === 32 ? this.player.jump(this.frames) : null
+           // alert('entra down')
+            e.keyCode === 37 ? this.move(-1, 5) : null
+            e.keyCode === 39 ? this.move(+1, 5) : null
+            e.keyCode === 32 ? this.player.jump(this.frames) : null
+        }
+
+        document.onkeyup = e => {
+            //alert('entra ip')
+            e.keyCode === 37 ? this.move(-1, 0.1) : null
+            e.keyCode === 39 ? this.move(+1, 0.1) : null
+            e.keyCode === 32 ? this.player.jump(this.frames) : null
         }
         // document.onkeyup = e => {
         //     e.keyCode === 32 ? this.player.floor(this.frames) : null
@@ -86,9 +102,9 @@ class Player {
             y: canvasH - this.playerSize.h
         }
         this.playerImg = undefined
-        this.playerSpeed = 5 // Podemos mandarle y añadirle la velocidad global del juego
+        this.playerSpeedX = 0 // Podemos mandarle y añadirle la velocidad global del juego
+        this.playerSpeedY = 0
         this.playerDir = 1
-        this.jumpSpeed = 2
         this.gravity = 0.5
         this.initPlayer(img)
     }
@@ -101,23 +117,27 @@ class Player {
         this.ctx.drawImage(this.playerImg, this.playerPos.x, this.playerPos.y,  this.playerSize.w , this.playerSize.h)
     }
 
-    move(dir) {
+    move(dir, speed) {
         this.playerDir = dir
-        this.playerPos.x += this.playerSpeed * this.playerDir
+        this.playerSpeedX = speed * this.playerDir
+            
     }
-    jump(frames) {
+    jump() {
         jump = 1
 
-            if (this.playerPos.y > 100)
-                this.playerPos += 10 
-            else 
-                this.playerPos += 1
+        this.playerSpeedY = -50
+
+            // if (this.playerPos.y > 100)
+            //     this.playerPos += 10 
+            // else 
+            //     this.playerPos += 1
             // console.log(this.playerPos.y)
             // this.playerPos.y -= this.jumpSpeed
             // this.jumpSpeed += this.gravity
-        }
+        
     }
-}
+}    
+
 
 class enemy {
     constructor(ctx) {
