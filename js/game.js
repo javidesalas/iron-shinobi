@@ -2,7 +2,7 @@
 // TODO: 
 let canvasH = 600
 let canvasW = 800
-let jump = 0
+
 
 const shinobiApp = {
     name: 'Basic forms drawing app',
@@ -33,20 +33,36 @@ const shinobiApp = {
             this.mapX++
             frames++
             this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
-            this.movement()
-            this.draw()
+            this.movementLoop()
+            this.drawLoop()
             this.setEventListeners()
             
         }, 30)
     },
-    movement() {
-        this.player.playerPos.x += this.player.playerSpeedX
-        this.player.playerPos.y += this.player.playerSpeedY
+    movementLoop() {
+        // limites laterales
+        if ((this.player.playerDir === -1 && this.player.playerPos.x >= 0 + 20) 
+                || (this.player.playerDir === 1 && this.player.playerPos.x <= canvasW - this.player.playerSize.w - 20)){
+            this.player.playerPos.x += this.player.playerSpeedX //movimiento horizontal
+        }
+        //limite suelo
+        if (this.player.playerPos.y > canvasH - this.player.playerSize.h -5) {
+            this.player.playerPos.y = canvasH - this.player.playerSize.h -5
+            this.player.playerSpeedY = 0
+            this.player.onFloor = 1
+            //movimiento vertical
+            //this.player.isJumping = 0
+        }
+        else {
+            this.player.playerPos.y += this.player.playerSpeedY //movimiento vertical
 
-        //this.player.playerSpeedY+= 1.5
+        }
+        if ( this.player.onFloor === 0) {
+            this.player.playerSpeedY+= 1.5 //gravedad
+        }
     },
 
-    draw() {
+    drawLoop() {
         //background
         this.ctx.fillStyle = 'grey'
         this.ctx.fillRect(0, 0, this.canvasSize.w, this.canvasSize.h)
@@ -66,14 +82,14 @@ const shinobiApp = {
            // alert('entra down')
             e.keyCode === 37 ? this.move(-1, 5) : null
             e.keyCode === 39 ? this.move(+1, 5) : null
-            e.keyCode === 32 ? this.player.jump(this.frames) : null
+            e.keyCode === 32 && this.player.onFloor ? this.player.jump() : null
         }
 
         document.onkeyup = e => {
-            //alert('entra ip')
-            e.keyCode === 37 ? this.move(-1, 0.1) : null
-            e.keyCode === 39 ? this.move(+1, 0.1) : null
-            e.keyCode === 32 ? this.player.jump(this.frames) : null
+           
+            e.keyCode === 37 ? this.move(-1, 0) : null
+            e.keyCode === 39 ? this.move(+1, 0) : null
+            
         }
         // document.onkeyup = e => {
         //     e.keyCode === 32 ? this.player.floor(this.frames) : null
@@ -83,8 +99,8 @@ const shinobiApp = {
        // KEY PRESS space:
             // this.ctx.jump() ?
     },
-    move(dir) {
-        this.player.move(dir)
+    move(dir, speed) {
+        this.player.move(dir, speed)
         // this.ctx.enemy.move(dir)
         // this.ctx.obstacle.move(dir)
     }
@@ -105,7 +121,7 @@ class Player {
         this.playerSpeedX = 0 // Podemos mandarle y añadirle la velocidad global del juego
         this.playerSpeedY = 0
         this.playerDir = 1
-        this.gravity = 0.5
+        this.onFloor = 1
         this.initPlayer(img)
     }
 
@@ -119,13 +135,16 @@ class Player {
 
     move(dir, speed) {
         this.playerDir = dir
-        this.playerSpeedX = speed * this.playerDir
-            
+ 
+        this.playerSpeedX = speed * dir
+        console.log(this.playerSpeedX)
+               
+        
     }
     jump() {
-        jump = 1
+        this.onFloor = 0
 
-        this.playerSpeedY = -50
+        this.playerSpeedY = -25
 
             // if (this.playerPos.y > 100)
             //     this.playerPos += 10 
@@ -133,8 +152,7 @@ class Player {
             //     this.playerPos += 1
             // console.log(this.playerPos.y)
             // this.playerPos.y -= this.jumpSpeed
-            // this.jumpSpeed += this.gravity
-        
+            // this.jumpSpeed += this.gravity       
     }
 }    
 
