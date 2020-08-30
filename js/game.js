@@ -1,8 +1,6 @@
 // TODO:
 let canvasH = 600
 let canvasW = 800
-let onObstacle = 0
-
 
 const shinobiApp = {
     name: 'Basic forms drawing app',
@@ -40,14 +38,13 @@ const shinobiApp = {
         }, 30)
     },
     checkColisionX() {
-        onObstacle = 0
+        
         this.obstacles.forEach(elm => {
             if ((this.player.playerPos.x + (this.player.playerSpeedX ) + this.player.playerSize.w > elm.obsPos.x ) // Left
                 && ((this.player.playerPos.x + (this.player.playerSpeedX ) < elm.obsPos.x + elm.obsSize.w)) // Right
                 && (this.player.playerPos.y + this.player.playerSize.h > elm.obsPos.y) // Up
                 && (this.player.playerPos.y < elm.obsPos.y + elm.obsSize.h)) { // Right
-                  
-
+                 
                     if (this.player.playerPos.y + this.player.playerSize.h > elm.obsPos.y - 2 // Up
                     && this.player.playerPos.y < elm.obsPos.y + elm.obsSize.h + 2) {
                         this.player.collidesX = 1
@@ -58,15 +55,12 @@ const shinobiApp = {
                             this.player.playerPos.x = elm.obsPos.x + elm.obsSize.w +2
                         }
                     }
-            }
-
-            
-            
+            }                 
         });
         //return dirColision
     },
     checkColisionY() {
-        //let dirColision = 0
+        //this.player.onObstacle = 0
         this.obstacles.forEach(elm => {
             if ((this.player.playerPos.x + this.player.playerSize.w > elm.obsPos.x ) // Left
             && (this.player.playerPos.x < elm.obsPos.x + elm.obsSize.w) // Right
@@ -80,7 +74,8 @@ const shinobiApp = {
             }
             if ((this.player.playerPos.y + this.player.playerSize.h < elm.obsPos.y +5)
                 && (this.player.playerPos.y + this.player.playerSize.h > elm.obsPos.y)) {
-                    onObstacle = 1
+                    this.player.onObstacle = 1
+                    console.log(this.player.onObstacle)
             }
             
             
@@ -112,14 +107,14 @@ const shinobiApp = {
             if (this.player.collidesY === 1) {
                 this.player.playerSpeedY = 0
                 this.player.collidesY = 0
-                onObstacle = 1
+                this.player.onObstacle = 1
             }
             this.player.playerPos.y += this.player.playerSpeedY //movimiento vertical
             this.checkColisionY()
             
         }
 
-        if ( !this.player.onFloor || !onObstacle) {
+        if ( !this.player.onFloor) {
             this.player.playerSpeedY+= 1.5 //gravedad
         }
     },
@@ -144,7 +139,7 @@ const shinobiApp = {
            // alert('entra down')
             e.keyCode === 37 ? this.move(-1, 5) : null
             e.keyCode === 39 ? this.move(+1, 5) : null
-            e.keyCode === 32 && (this.player.onFloor || onObstacle)  ? this.player.jump() : null
+            e.keyCode === 32 && (this.player.onFloor || this.player.onObstacle)  ? this.player.jump() : null
         }
 
         document.onkeyup = e => {
@@ -178,7 +173,7 @@ class Player {
         this.playerSpeedY = 0
         this.playerDir = 1
         this.onFloor = 1
-        this.onObstacle= 0
+        this.onObstacle= 1
         this.collidesX = 0
         this.collidesY = 0
         this.initPlayer(img)
@@ -200,6 +195,7 @@ class Player {
     }
     jump() {
         this.onFloor = 0
+        this.onObstacle = 0
 
         this.playerSpeedY = -30    
     }
