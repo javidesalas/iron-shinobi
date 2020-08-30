@@ -38,28 +38,58 @@ const shinobiApp = {
             
         }, 30)
     },
-    checkColision() {
-        let dirColision = 0
+    checkColisionX() {
+        //let dirColision = 0
         this.obstacles.forEach(elm => {
-            if ((this.player.playerPos.x + this.player.playerSize.w > elm.obsPos.x ) // Left
-                && ((this.player.playerPos.x < elm.obsPos.x + elm.obsSize.w)) // Right
+            if ((this.player.playerPos.x + (this.player.playerSpeedX ) + this.player.playerSize.w > elm.obsPos.x ) // Left
+                && ((this.player.playerPos.x + (this.player.playerSpeedX ) < elm.obsPos.x + elm.obsSize.w)) // Right
                 && (this.player.playerPos.y + this.player.playerSize.h > elm.obsPos.y) // Up
                 && (this.player.playerPos.y < elm.obsPos.y + elm.obsSize.h)) { // Right
-                if (this.player.playerPos.x > elm.obsPos.x)   
-                    dirColision = -1
-                if (this.player.playerPos.x < elm.obsPos.x)   
-                    dirColision = 1
+                  
+
+                    if (this.player.playerPos.y + this.player.playerSize.h > elm.obsPos.y - 2 // Up
+                    && this.player.playerPos.y < elm.obsPos.y + elm.obsSize.h + 2) {
+                        this.player.colidesX = 1
+                        if (this.player.playerDir === 1) {
+                            this.player.playerPos.x = elm.obsPos.x - this.player.playerSize.w -2
+                        }
+                        if (this.player.playerDir === -1) {
+                            this.player.playerPos.x = elm.obsPos.x + elm.obsSize.w +2
+                        }
+                    }
             }
         });
-        return dirColision
+        //return dirColision
+    },
+    checkColisionY() {
+        //let dirColision = 0
+        this.obstacles.forEach(elm => {
+            if ((this.player.playerPos.x + this.player.playerSize.w > elm.obsPos.x ) // Left
+                && (this.player.playerPos.x < elm.obsPos.x + elm.obsSize.w) // Right
+                && (this.player.playerPos.y + (this.player.playerSpeedY) + this.player.playerSize.h > elm.obsPos.y) // Up
+                && (this.player.playerPos.y + (this.player.playerSpeedY) < elm.obsPos.y + elm.obsSize.h)) { // Right
+                    if ((this.player.playerPos.x + this.player.playerSize.w > elm.obsPos.x ) // Left
+                    && (this.player.playerPos.x < elm.obsPos.x + elm.obsSize.w)) {
+                        this.player.colidesY = 1
+                        this.player.playerPos.y = elm.obsPos.y -this.player.playerSize.h -2
+                    }
+                }
+            
+        });
+        //return dirColision
     },
     movementLoop() {
         // limites laterales
         if ((this.player.playerDir === -1 && this.player.playerPos.x >= 0 + 20)
                 || (this.player.playerDir === 1 && this.player.playerPos.x <= canvasW - this.player.playerSize.w - 20)){
-            if(this.checkColision() != this.player.playerDir)
+            if(this.player.colidesX === 1) {
+                this.player.playerSpeedX = 0
+                this.player.colidesX = 0
+            }
+            else{
                 this.player.playerPos.x += this.player.playerSpeedX //movimiento horizontal
-                console.log(this.player.playerDir)
+                this.checkColisionX()
+            }
         }
         //limite suelo
         if (this.player.playerPos.y > canvasH - this.player.playerSize.h -5) {
@@ -67,15 +97,15 @@ const shinobiApp = {
             this.player.playerSpeedY = 0
             this.player.onFloor = 1
         }
-        else if (this.checkColision() === 2) {
-            console.log("entro")
-            //this.player.playerPos.y = this.obstacles.obsPos.y - this.player.playerPos.x - 1
-             //this.player.playerSpeedY = 0
-             this.player.onFloor = 1
-        }
+       
+       
         else {
+            if (this.player.colidesY === 1) {
+                this.player.playerSpeedY = 0
+                this.player.colidesY = 0
+            }
             this.player.playerPos.y += this.player.playerSpeedY //movimiento vertical
-
+            this.checkColisionY()
         }
 
         if ( this.player.onFloor === 0) {
@@ -137,6 +167,7 @@ class Player {
         this.playerSpeedY = 0
         this.playerDir = 1
         this.onFloor = 1
+        this.collidesX = 0
         this.initPlayer(img)
     }
 
@@ -157,7 +188,7 @@ class Player {
     jump() {
         this.onFloor = 0
 
-        this.playerSpeedY = -60    
+        this.playerSpeedY = -30    
     }
 }    
 
