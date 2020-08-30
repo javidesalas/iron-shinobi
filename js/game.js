@@ -1,5 +1,5 @@
-
-// TODO: 
+//  ESTO ES UNA PRUEBA!
+// TODO:
 let canvasH = 600
 let canvasW = 800
 
