@@ -1,4 +1,3 @@
-//  ESTO ES UNA PRUEBA!
 // TODO:
 let canvasH = 600
 let canvasW = 800
@@ -27,8 +26,8 @@ const shinobiApp = {
         this.canvasId = 'gameCanvas'
         this.ctx = document.getElementById(this.canvasId).getContext('2d')
         this.player = new Player(this.ctx, './images/player.png')
-        console.log(this.player)
-        console.log(this.player.playerImg)
+        this.obstacles.push(new Obstacle(this.ctx, './images/obstacle.png'))
+
         setInterval(() => {
             this.mapX++
             frames++
@@ -39,24 +38,46 @@ const shinobiApp = {
             
         }, 30)
     },
+    checkColision() {
+        let dirColision = 0
+        this.obstacles.forEach(elm => {
+            if ((this.player.playerPos.x + this.player.playerSize.w > elm.obsPos.x ) // Left
+                && ((this.player.playerPos.x < elm.obsPos.x + elm.obsSize.w)) // Right
+                && (this.player.playerPos.y + this.player.playerSize.h > elm.obsPos.y) // Up
+                && (this.player.playerPos.y < elm.obsPos.y + elm.obsSize.h)) { // Right
+                if (this.player.playerPos.x > elm.obsPos.x)   
+                    dirColision = -1
+                if (this.player.playerPos.x < elm.obsPos.x)   
+                    dirColision = 1
+            }
+        });
+        return dirColision
+    },
     movementLoop() {
         // limites laterales
-        if ((this.player.playerDir === -1 && this.player.playerPos.x >= 0 + 20) 
+        if ((this.player.playerDir === -1 && this.player.playerPos.x >= 0 + 20)
                 || (this.player.playerDir === 1 && this.player.playerPos.x <= canvasW - this.player.playerSize.w - 20)){
-            this.player.playerPos.x += this.player.playerSpeedX //movimiento horizontal
+            if(this.checkColision() != this.player.playerDir)
+                this.player.playerPos.x += this.player.playerSpeedX //movimiento horizontal
+                console.log(this.player.playerDir)
         }
         //limite suelo
         if (this.player.playerPos.y > canvasH - this.player.playerSize.h -5) {
             this.player.playerPos.y = canvasH - this.player.playerSize.h -5
             this.player.playerSpeedY = 0
             this.player.onFloor = 1
-            //movimiento vertical
-            //this.player.isJumping = 0
+        }
+        else if (this.checkColision() === 2) {
+            console.log("entro")
+            //this.player.playerPos.y = this.obstacles.obsPos.y - this.player.playerPos.x - 1
+             //this.player.playerSpeedY = 0
+             this.player.onFloor = 1
         }
         else {
             this.player.playerPos.y += this.player.playerSpeedY //movimiento vertical
 
         }
+
         if ( this.player.onFloor === 0) {
             this.player.playerSpeedY+= 1.5 //gravedad
         }
@@ -71,10 +92,10 @@ const shinobiApp = {
 
         //Intervalo
 
-            //tenemos que dibujar todo.
+
         this.player.draw()
-            //detectar colisiones
-            //
+        this.obstacles.forEach(elm => elm.draw())
+
         
     }, // KEYCODES
     setEventListeners() {
@@ -91,13 +112,7 @@ const shinobiApp = {
             e.keyCode === 39 ? this.move(+1, 0) : null
             
         }
-        // document.onkeyup = e => {
-        //     e.keyCode === 32 ? this.player.floor(this.frames) : null
-        // }
-         // KEY PRESS  r:
-            // this.ctx.move(dir) ?
-       // KEY PRESS space:
-            // this.ctx.jump() ?
+
     },
     move(dir, speed) {
         this.player.move(dir, speed)
@@ -137,22 +152,12 @@ class Player {
         this.playerDir = dir
  
         this.playerSpeedX = speed * dir
-        console.log(this.playerSpeedX)
-               
-        
+ 
     }
     jump() {
         this.onFloor = 0
 
-        this.playerSpeedY = -25
-
-            // if (this.playerPos.y > 100)
-            //     this.playerPos += 10 
-            // else 
-            //     this.playerPos += 1
-            // console.log(this.playerPos.y)
-            // this.playerPos.y -= this.jumpSpeed
-            // this.jumpSpeed += this.gravity       
+        this.playerSpeedY = -60    
     }
 }    
 
@@ -160,17 +165,18 @@ class Player {
 class enemy {
     constructor(ctx) {
         this.ctx = ctx
-        enemyPos = {
+        this.enemyPos = {
             x: 0,
             y: 0
         }
-        enemyImg = undefined
-        enemySize = {
+        this.enemyImg = undefined
+        this.enemySize = {
             w: 200,
             h: 300,
         }
-        enemySpeed = this.ctx.speed
-        enemyDir = -1
+        this.enemySpeed = this.ctx.speed
+        this.enemyDir = -1
+
     }
     move() {
         
@@ -178,20 +184,28 @@ class enemy {
   
 }
 
-class obstacle {
-    constructor(ctx) {
+class Obstacle {
+    constructor(ctx, img) {
         this.ctx = ctx
-        obsPos = {
-            x: 0,
-            y: 0
+        this.obsPos = {
+            x: 300,
+            y: canvasH - 150
         }
-        obsImg = undefined
-        obsSize = {
-            w: 200,
-            h: 300,
+        this.obsImg = undefined
+        this.obsSize = {
+            w: 100,
+            h: 150,
         }
-        obsSpeed = this.ctx.speed
-        obsDir = -1
+        this.obsSpeed = this.ctx.speed
+    //  this.obsDir = -1
+        this.initObstacle(img)
+    }
+    initObstacle (img) {
+        this.obsImg = new Image
+        this.obsImg.src = img
+    }
+    draw() {
+        this.ctx.drawImage(this.obsImg, this.obsPos.x, this.obsPos.y,  this.obsSize.w , this.obsSize.h)
     }
     move() {
 
