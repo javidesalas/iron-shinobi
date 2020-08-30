@@ -16,6 +16,7 @@ const shinobiApp = {
     },
     mapX: 0,
     mapY: undefined,
+    background:undefined,
     player: undefined,
     enemys: [],
     obstacles: [],
@@ -24,6 +25,10 @@ const shinobiApp = {
     init(){
         this.canvasId = 'gameCanvas'
         this.ctx = document.getElementById(this.canvasId).getContext('2d')
+        
+        //this.background = new Image
+        //this.background.src = './images/player.png'
+
         this.player = new Player(this.ctx, './images/player.png')
         this.obstacles.push(new Obstacle(this.ctx, './images/obstacle.png'))
 
@@ -37,6 +42,8 @@ const shinobiApp = {
             
         }, 30)
     },
+
+    
     checkColisionX() {
         
         this.obstacles.forEach(elm => {
@@ -121,17 +128,18 @@ const shinobiApp = {
 
     drawLoop() {
         //background
-        this.ctx.fillStyle = 'grey'
-        this.ctx.fillRect(0, 0, this.canvasSize.w, this.canvasSize.h)
+       this.ctx.fillStyle = 'grey'
+       this.ctx.fillRect(0, 0, this.canvasSize.w, this.canvasSize.h)
 
         //cargar objetos
 
         //Intervalo
 
-
         this.player.draw()
         this.obstacles.forEach(elm => elm.draw())
-
+        // this.background.onload= e => { this.ctx.drawImage(this.background, 0, 0, canvasW, canvasH)}
+        // this.player.playerImg.onload= e => {this.player.draw()}
+        // this.obstacles[0].obsImg.onload= e => {this.obstacles[0].draw()})
         
     }, // KEYCODES
     setEventListeners() {
@@ -161,11 +169,11 @@ class Player {
     constructor(ctx, img) {
         this.ctx = ctx
         this.playerSize = {
-            w: 100,
-            h: 75,
+            w: 200,
+            h: 200,
         }
         this.playerPos = {
-            x: 0,
+            x: 20,
             y: canvasH - this.playerSize.h
         }
         this.playerImg = undefined
@@ -228,13 +236,13 @@ class Obstacle {
     constructor(ctx, img) {
         this.ctx = ctx
         this.obsPos = {
-            x: 300,
-            y: canvasH - 75
+            x: 350,
+            y: canvasH - 138
         }
         this.obsImg = undefined
         this.obsSize = {
-            w: 50,
-            h: 75,
+            w: 183,
+            h: 133,
         }
         this.obsSpeed = this.ctx.speed
     //  this.obsDir = -1
