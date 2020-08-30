@@ -197,12 +197,4 @@ class obstacle {
 
     }
 }
-
-    
-
-// player = cuadrado verde, 
-// enemy = cuadrado marron,
-// obstacles = cuadrados amarillos,
-// keycodes,
-    
     
