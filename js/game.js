@@ -1,4 +1,4 @@
-// TODO:
+
 let canvasH = 600
 let canvasW = 800
 
@@ -46,7 +46,6 @@ const shinobiApp = {
 
     
     checkColisionX() {
-        
         this.obstacles.forEach(elm => {
             if ((this.player.playerPos.x + (this.player.playerSpeedX ) + this.player.playerSize.w > elm.obsPos.x ) // Left
                 && ((this.player.playerPos.x + (this.player.playerSpeedX) < elm.obsPos.x + elm.obsSize.w)) // Right
@@ -72,10 +71,8 @@ const shinobiApp = {
                     }
             }                 
         });
-        //return dirColision
     },
     checkColisionY() {
-        //this.player.onObstacle = 0
         this.obstacles.forEach(elm => {
             if ((this.player.playerPos.x + this.player.playerSize.w > elm.obsPos.x ) // Left
             && (this.player.playerPos.x < elm.obsPos.x + elm.obsSize.w) // Right
@@ -95,7 +92,6 @@ const shinobiApp = {
             
             
         });
-        //return dirColision
     },
     movementLoop() {
         // limites laterales
@@ -110,10 +106,6 @@ const shinobiApp = {
                     elm.move(this.player.playerSpeedX)
                     this.mapX += this.player.playerSpeedX
                 })
-                // this.enemies.forEach((elm) => {
-                //     elm.move(this.player.playerSpeedX)
-                // })
-                 //movimiento horizontal
                 this.checkColisionX()
             }
         }
@@ -123,8 +115,6 @@ const shinobiApp = {
             this.player.playerSpeedY = 0
             this.player.onFloor = 1
         }
-       
-       
         else {
             if (this.player.collidesY === 1) {
                 this.player.playerSpeedY = 0
@@ -145,22 +135,14 @@ const shinobiApp = {
         //background
         this.ctx.fillStyle = 'grey'
         this.ctx.fillRect(0, 0, this.canvasSize.w, this.canvasSize.h)
+
+        
         this.ctx.drawImage(this.fuji, 0, 0)
-
         this.background.draw(this.mapX)
-        
-
-        
-
-        //cargar objetos
-
-        //Intervalo
+    
 
         this.player.draw()
         this.obstacles.forEach(elm => elm.draw())
-        // this.background.onload= e => { this.ctx.drawImage(this.background, 0, 0, canvasW, canvasH)}
-        // this.player.playerImg.onload= e => {this.player.draw()}
-        // this.obstacles[0].obsImg.onload= e => {this.obstacles[0].draw()})
         
     }, // KEYCODES
     setEventListeners() {
@@ -177,12 +159,9 @@ const shinobiApp = {
             e.keyCode === 39 ? this.move(+1, 0) : null
             
         }
-
     },
     move(dir, speed) {
         this.player.move(dir, speed)
-        // this.ctx.enemy.move(dir)
-        // this.ctx.obstacle.move(dir)
     }
 };
 
@@ -207,7 +186,6 @@ class Player {
         this.collidesY = 0
         this.initPlayer(img)
     }
-
     initPlayer (img) {
         this.playerImg = new Image
         this.playerImg.src = img
@@ -227,7 +205,6 @@ class Player {
         this.playerSpeedY = -30    
     }
 }    
-
 
 class enemy {
     constructor(ctx) {
@@ -303,4 +280,3 @@ class Background {
         this.ctx.drawImage(this.bgImg, -(this.bgPos.x) + 1490, this.bgPos.y,  this.bgSize.w , this.bgSize.h)
     }
 }
-    
