@@ -146,8 +146,10 @@ const shinobiApp = {
         this.ctx.fillStyle = 'grey'
         this.ctx.fillRect(0, 0, this.canvasSize.w, this.canvasSize.h)
         this.ctx.drawImage(this.fuji, 0, 0)
-        this.background.draw()
-       
+
+        this.background.draw(this.mapX)
+        
+
         
 
         //cargar objetos
@@ -282,22 +284,23 @@ class Background {
         this.src = img
         this.bgPos = {
             x: 0,
-            y: 500
+            y: 0
         }
         this.bgImg = undefined
         this.bgSize = {
-            w: 600,
-            h: 500,
+            w: 1490,
+            h: 600,
         }
         this.initbg(img)
     }
     initbg(img){
         this.bgImg = new Image
-        this.src = img
+        this.bgImg.src = img
     }
-    draw() {
-        this.ctx.drawImage(this.bgImg, this.bgPos.x, this.bgPos.y,  this.bgSize.w , this.bgSize.h)
-       
+    draw(mapx) {
+        this.bgPos.x = mapx % 1490
+        this.ctx.drawImage(this.bgImg, -(this.bgPos.x), this.bgPos.y,  this.bgSize.w , this.bgSize.h)
+        this.ctx.drawImage(this.bgImg, -(this.bgPos.x) + 1490, this.bgPos.y,  this.bgSize.w , this.bgSize.h)
     }
 }
     
