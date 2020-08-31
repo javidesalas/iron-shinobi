@@ -11,6 +11,7 @@ class Sprite {
             h: h,
         }
         this.spriteSpeed = this.ctx.speed
+        this.retire = 0
         this.initSprite(img)
     }
     initSprite (img) {

@@ -2,8 +2,8 @@ class Player {
     constructor(ctx, img) {
         this.ctx = ctx
         this.playerSize = {
-            w: 200,
-            h: 200,
+            w: 75,
+            h: 75,
         }
         this.playerPos = {
             x: 100,
@@ -24,8 +24,25 @@ class Player {
         this.playerImg.src = img
     }
     draw() {
-        this.ctx.drawImage(this.playerImg, this.playerPos.x, this.playerPos.y,  this.playerSize.w , this.playerSize.h)
+        const drawOriginX = 200 * this.selectFrame()
+       // const drawOriginY = selectLook()
+        this.ctx.drawImage(this.playerImg, drawOriginX, 200, 200, 200, this.playerPos.x, this.playerPos.y,  this.playerSize.w , this.playerSize.h)
     }
+    selectFrame() {
+         let chosenFrame = 0
+         if (FRAMES % 20 <= 10) {
+             chosenFrame = 0
+         }
+         else {
+             chosenFrame = 1
+         }
+         return chosenFrame
+     }
+     selectLook() {
+         let chosenLook = 100
+        //  if (!this.onFloor && !this.onSprite)
+        //  if isju
+     }
 
     move(dir, speed) {
         this.playerDir = dir

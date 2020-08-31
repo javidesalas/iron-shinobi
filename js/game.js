@@ -1,6 +1,7 @@
 
 let canvasH = 600
 let canvasW = 800
+let FRAMES = 0
 
 const shinobiApp = {
     name: 'Basic forms drawing app',
@@ -20,6 +21,7 @@ const shinobiApp = {
     player: undefined,
     enemys: [],
     sprites: [],
+    bull: undefined,
     frames: 0,
     speed : 1,
     init(){
@@ -29,18 +31,22 @@ const shinobiApp = {
         this.fuji = new Image
         this.fuji.src = './images/fuji.png'
         this.background = new Background(this.ctx, './images/background.png')
-        console.log(this.background)
 
-    
         this.player = new Player(this.ctx, './images/player.png')
+
         this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 400, canvasH - 105, 100, 100))
         this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 700, canvasH - 55, 50, 50))
         this.gameOn()
+        
+        //this.bull = new Bullet(this.ctx, './images/shuriken1.png', this.player.playerPos.x + this.player.playerSize.w, this.player.playerPos.y, 10, 10)
+        
     },
 
-    gameOn(){
+    gameOn() {
+        
         setInterval(() => {
-            frames++
+            FRAMES++
+            if (FRAMES > 10000) FRAMES = 0
             this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
             this.movementLoop()
             this.drawLoop()
@@ -99,9 +105,28 @@ const shinobiApp = {
             
         });
     },
+    checkBulletsColision() {
+    let count = 0
+    this.sprites.forEach((elm) => {
+        count++
+        if (elm.isBullet === 1) {
+            for (let i = count - 2; i >= 0; i--){
+                if (this.sprites[i].spritePos.x > elm.spritePos.x - 15
+                    && this.sprites[i].spritePos.x < elm.spritePos.x + 15
+                    && this.sprites[i].spritePos.y < elm.spritePos.y + elm.spriteSize.h) {
+                    console.log(this.sprites[i].spritePos.x)
+                    console.log(elm.spritePos.x)
+                    elm.retire = 1
+                }
+            }
+        }
+    })
+        return 0
+    },
 
     movementLoop() {
         // limites laterales
+        this.sprites = this.sprites.filter((elm) => elm.retire === 0)
         if ((this.player.playerDir === -1 && this.mapX >= 0 + 20)
                 || (this.player.playerDir === 1 && this.mapX <= this.mapSize - this.player.playerSize.w - 20)){
             if(this.player.collidesX === 1) {
@@ -110,7 +135,15 @@ const shinobiApp = {
             }
             else {
                 this.sprites.forEach((elm) => {
-                    elm.move(this.player.playerSpeedX)
+
+                    if (elm.isBullet === 1) {
+                        if (!this.checkBulletsColision())
+                            elm.moveBullet()
+                        else
+                            alert("que si xoco empanao")
+                    }
+                    else
+                        elm.move(this.player.playerSpeedX)
                     this.mapX += this.player.playerSpeedX
                 })
                 this.checkColisionX()
@@ -152,13 +185,17 @@ const shinobiApp = {
         this.sprites.forEach(elm => elm.draw())
         
     }, // KEYCODES
-
+    createBullet() {
+        this.bull = new Bullet(this.ctx, './images/shuriken1.png', this.player.playerPos.x + this.player.playerSize.w, this.player.playerPos.y, 10, 10)
+        this.sprites.push(this.bull)
+    },
     setEventListeners() {
         document.onkeydown = e => {
            // alert('entra down')
             e.keyCode === 37 ? this.player.move(-1, 5) : null
             e.keyCode === 39 ? this.player.move(+1, 5) : null
-            e.keyCode === 32 && (this.player.onFloor || this.player.onSprite)  ? this.player.jump() : null
+            e.keyCode === 32 && (this.player.onFloor || this.player.onSprite) ? this.player.jump() : null
+            e.keyCode === 65 ? this.createBullet() : null
         }
 
         document.onkeyup = e => {
