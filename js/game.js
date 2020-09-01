@@ -25,6 +25,7 @@ const shinobiApp = {
     bull: undefined,
     frames: 0,
     speed : 1,
+    mapFlag : [0,0,0],
     init(){
         this.canvasId = 'gameCanvas'
         this.ctx = document.getElementById(this.canvasId).getContext('2d')
@@ -59,20 +60,31 @@ const shinobiApp = {
             this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
             this.movementLoop()
             this.drawLoop()
+            this.sprites
         }, 30)  
 
     },
 
     manageMap(){
-        let mapFlag = [0,0,0]
-        let mapCounter = 0
-
-        if (this.mapX > 900 && mapFlag[mapCounter]=== 0) {
-            this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1700, canvasH - 155, 150, 150))
-            mapCounter++
+        //Call instances for sprites and decoration close to the player 
+        if (this.mapX > 900 && this.mapFlag[0] === 0) {
+            this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1200, canvasH - 355, 150, 150))
+            this.mapFlag[0] = 1
         }
 
-
+        //Remove sprites and decoration far from the player 
+        this.sprites.forEach ( elm => {
+            if (elm.spritePos.x < -1600) {
+                elm.retire = 1
+            }
+        })
+        this.decorations.forEach ( elm => {
+            if (elm.decoPos.x < -1600) {
+                elm.retire = 1
+            }
+        })
+        this.sprites = this.sprites.filter((elm) => elm.retire === 0)
+        this.decorations = this.decorations.filter((elm) => elm.retire === 0)
     },
     
     checkColisionX() {
@@ -138,7 +150,8 @@ const shinobiApp = {
                 if (this.sprites[i].constructor.name !== 'Enemy' || elm.fromEnemy !== 1) {
                     if (elm.dirBullet === 1 && this.sprites[i].spritePos.x > elm.spritePos.x - 15
                         && this.sprites[i].spritePos.x < elm.spritePos.x + 15
-                        && this.sprites[i].spritePos.y < elm.spritePos.y + elm.spriteSize.h) {
+                        && this.sprites[i].spritePos.y < elm.spritePos.y + elm.spriteSize.h
+                        && this.sprites[i].spritePos.y + this.sprites[i].spriteSize.h > elm.spritePos.y) {
                     
                         elm.retire = 1
                         if (this.sprites[i].constructor.name === 'Enemy')
@@ -161,7 +174,6 @@ const shinobiApp = {
 
     movementLoop() {
         // limites laterales
-        this.sprites = this.sprites.filter((elm) => elm.retire === 0)
         if ((this.player.playerDir === -1 && this.mapX >= 0 + 20)
                 || (this.player.playerDir === 1 && this.mapX <= this.mapSize - this.player.playerSize.w - 20)){
             if(this.player.collidesX === 1) {
@@ -258,6 +270,7 @@ const shinobiApp = {
             e.keyCode === 37 ? this.player.move(-1, 5) : null
             e.keyCode === 39 ? this.player.move(+1, 5) : null
             e.keyCode === 32 && (this.player.onFloor || this.player.onSprite) ? this.player.jump() : null
+            e.keyCode === 40 && (this.player.onFloor || this.player.onSprite) ? this.player.isCrouched = 1 : null
             e.keyCode === 65 ? this.createBullet(1) : null
         }
 
@@ -265,7 +278,7 @@ const shinobiApp = {
            
             e.keyCode === 37 ? this.player.move(-1, 0) : null
             e.keyCode === 39 ? this.player.move(+1, 0) : null
-            
+            e.keyCode === 40 ? this.player.isCrouched = 0 : null
         }
     },
 

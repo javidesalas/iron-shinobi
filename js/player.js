@@ -24,9 +24,22 @@ class Player {
         this.playerImg.src = img
     }
     draw() {
-        const drawOriginX = 200 * this.selectFrame()
-        const drawOriginY = this.selectLook()
+        let drawOriginX = 200 * this.selectFrame()
+        let drawOriginY = this.selectLook()
+        if (this.isCrouched === 1) {
+            drawOriginY = 900 + 100 * this.playerDir
+            this.playerSize.h = 100
+            this.onFloor = 0
+            this.onSprite = 0
+            this.playerSpeedY += 100
+
+        }
+        else {
+            this.playerSize.h = 200
+            }
         this.ctx.drawImage(this.playerImg, drawOriginX, drawOriginY, 200, 200, this.playerPos.x, this.playerPos.y,  this.playerSize.w , this.playerSize.h)
+    
+    
     }
     selectFrame() {
          let chosenFrame = 0
@@ -52,6 +65,8 @@ class Player {
      }
     move(dir, speed) {
         this.playerDir = dir
+        if (this.isCrouched === 1 && speed !== 0) 
+            speed = 1
         this.playerSpeedX = speed * dir
     }
     jump() {
