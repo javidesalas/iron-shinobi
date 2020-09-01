@@ -21,6 +21,7 @@ const shinobiApp = {
     player: undefined,
     enemies: undefined,
     sprites: [],
+    decorations: [],
     bull: undefined,
     frames: 0,
     speed : 1,
@@ -32,13 +33,15 @@ const shinobiApp = {
         this.fuji.src = './images/fuji.png'
         this.background = new Background(this.ctx, './images/background.png')
 
+        this.decorations.push(new Decoration(this.ctx,'./images/tree.png',700, 75, 450, 450))
+
         this.player = new Player(this.ctx, './images/player.png')
 
         this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 250, canvasH - 105, 100, 100))
         this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 700, canvasH - 55, 50, 50))
         
-        this.sprites.push(new Enemy(this.ctx, './images/enemy.png', 400, canvasH - 105, 100, 100))
-        console.log(this.sprites)
+        //this.sprites.push(new Enemy(this.ctx, './images/enemy.png', 400, canvasH - 155, 150, 150))
+      
         this.gameOn()
         
         //this.bull = new Bullet(this.ctx, './images/shuriken1.png', this.player.playerPos.x + this.player.playerSize.w, this.player.playerPos.y, 10, 10)
@@ -47,17 +50,30 @@ const shinobiApp = {
 
     gameOn() {
         
+        this.setEventListeners()
         setInterval(() => {
             FRAMES++
             if (FRAMES > 10000) FRAMES = 0
+            this.manageMap()
+
             this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
             this.movementLoop()
             this.drawLoop()
-            this.setEventListeners()
         }, 30)  
 
     },
 
+    manageMap(){
+        let mapFlag = [0,0,0]
+        let mapCounter = 0
+
+        if (this.mapX > 900 && mapFlag[mapCounter]=== 0) {
+            this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1700, canvasH - 155, 150, 150))
+            mapCounter++
+        }
+
+
+    },
     
     checkColisionX() {
         this.sprites.forEach(elm => {
@@ -75,14 +91,16 @@ const shinobiApp = {
                         if (this.player.playerDir === 1) {
                             this.sprites.forEach(elm => {
                                 elm.spritePos.x += protection
-                                this.mapX -= protection
                             }) 
+                            this.mapX -= protection
+                            this.decorations.forEach(elm => elm.decoPos.x += protection)
                         }
                         if (this.player.playerDir === -1) {
                             this.sprites.forEach(elm => {
                                 elm.spritePos.x -= protection
-                                this.mapX += protection
                             })
+                            this.mapX += protection
+                            this.decorations.forEach(elm => elm.decoPos.x -= protection)
                         }
                     }
             }                 
@@ -149,21 +167,29 @@ const shinobiApp = {
             if(this.player.collidesX === 1) {
                 this.player.playerSpeedX = 0
                 this.player.collidesX = 0
+                
             }
             else {
-                this.sprites.forEach((elm) => {
-
+                
+                this.sprites.forEach((elm, index) => {
                     if (elm.isBullet === 1) {
                         if (!this.checkBulletsColision())
-                            elm.moveBullet()
+                        elm.moveBullet()
                     }
-                    else
+                    else {
                         elm.move(this.player.playerSpeedX)
-                    this.mapX += this.player.playerSpeedX
+                        if (index === 0) 
+                        this.decorations.forEach(elm => elm.move(this.player.playerSpeedX))
+                    }
                 })
+                
                 this.checkColisionX()
+                this.mapX += this.player.playerSpeedX
             }
         }
+
+      
+        
         //limite suelo
         if (this.player.playerPos.y + this.player.playerSpeedY > canvasH - this.player.playerSize.h -5) {
             this.player.playerPos.y = canvasH - this.player.playerSize.h -5
@@ -184,6 +210,8 @@ const shinobiApp = {
         if ( !this.player.onFloor) {
             this.player.playerSpeedY+= 1.5 //gravedad
         }
+
+        
     },
 
     drawLoop() {
@@ -195,6 +223,7 @@ const shinobiApp = {
         this.ctx.drawImage(this.fuji, 0, 0)
         this.background.draw(this.mapX)
     
+        this.decorations.forEach(elm => elm.draw(this.mapX)) 
 
         this.player.draw()
 

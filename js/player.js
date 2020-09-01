@@ -2,11 +2,11 @@ class Player {
     constructor(ctx, img) {
         this.ctx = ctx
         this.playerSize = {
-            w: 100,
-            h: 100,
+            w: 150,
+            h: 150,
         }
         this.playerPos = {
-            x: 100,
+            x: 150,
             y: canvasH - this.playerSize.h
         }
         this.playerImg = undefined
