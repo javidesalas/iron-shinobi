@@ -1,21 +1,13 @@
-class enemy {
-    constructor(ctx) {
-        this.ctx = ctx
-        this.enemyPos = {
-            x: 0,
-            y: 0
-        }
-        this.enemyImg = undefined
-        this.enemySize = {
-            w: 200,
-            h: 300,
-        }
-        this.enemySpeed = this.ctx.speed
-        this.enemyDir = -1
-
+class Enemy extends Sprite{
+    
+    draw() {
+        console.log("entro")
+        this.ctx.drawImage(this.spriteImg, this.spritePos.x, this.spritePos.y,  this.spriteSize.w , this.spriteSize.h)
     }
-    move(playerSpeedX) {
-            this.enemyPos.x -= playerSpeedX
+    // move(playerSpeedX) {
+    //         this.enemyPos.x -= playerSpeedX
+    // }
+    shot() {
+        
     }
-  
 }

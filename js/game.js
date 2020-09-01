@@ -19,7 +19,7 @@ const shinobiApp = {
     mapSize: 10000,
     background: undefined,
     player: undefined,
-    enemys: [],
+    enemies: undefined,
     sprites: [],
     bull: undefined,
     frames: 0,
@@ -34,8 +34,11 @@ const shinobiApp = {
 
         this.player = new Player(this.ctx, './images/player.png')
 
-        this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 400, canvasH - 105, 100, 100))
+        this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 250, canvasH - 105, 100, 100))
         this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 700, canvasH - 55, 50, 50))
+        
+        this.sprites.push(new Enemy(this.ctx, './images/enemy.png', 400, canvasH - 105, 100, 100))
+        console.log(this.sprites)
         this.gameOn()
         
         //this.bull = new Bullet(this.ctx, './images/shuriken1.png', this.player.playerPos.x + this.player.playerSize.w, this.player.playerPos.y, 10, 10)
@@ -51,7 +54,7 @@ const shinobiApp = {
             this.movementLoop()
             this.drawLoop()
             this.setEventListeners()
-        }, 30)
+        }, 30)  
 
     },
 
@@ -66,7 +69,9 @@ const shinobiApp = {
                     if (this.player.playerPos.y + this.player.playerSize.h > elm.spritePos.y - 2 // Up
                     && this.player.playerPos.y < elm.spritePos.y + elm.spriteSize.h + 2) {
                         this.player.collidesX = 1
-                        const protection =  5
+                        const protection = 5
+                        if (elm.fromEnemy === 1 || elm.constructor.name === 'Enemy')
+                            alert("GAME OVER")
                         if (this.player.playerDir === 1) {
                             this.sprites.forEach(elm => {
                                 elm.spritePos.x += protection
@@ -86,12 +91,14 @@ const shinobiApp = {
 
     checkColisionY() {
         this.sprites.forEach(elm => {
-            if ((this.player.playerPos.x + this.player.playerSize.w > elm.spritePos.x ) // Left
-            && (this.player.playerPos.x < elm.spritePos.x + elm.spriteSize.w) // Right
+            if ((this.player.playerPos.x + this.player.playerSize.w > elm.spritePos.x ) // Left 
+            && (this.player.playerPos.x < elm.spritePos.x + elm.spriteSize.w) // Right 
             && (this.player.playerPos.y + (this.player.playerSpeedY) + this.player.playerSize.h > elm.spritePos.y) // Up
             && (this.player.playerPos.y + (this.player.playerSpeedY) < elm.spritePos.y + elm.spriteSize.h)) { // Right
                 if ((this.player.playerPos.x + this.player.playerSize.w > elm.spritePos.x ) // Left
                 && (this.player.playerPos.x < elm.spritePos.x + elm.spriteSize.w)) {
+                    if (elm.fromEnemy === 1 || elm.constructor.name === 'Enemy')
+                    alert("GAME OVER")
                     this.player.collidesY = 1
                     this.player.playerPos.y = elm.spritePos.y -this.player.playerSize.h -2
                 }
@@ -99,7 +106,6 @@ const shinobiApp = {
             if ((this.player.playerPos.y + this.player.playerSize.h < elm.spritePos.y +5)
                 && (this.player.playerPos.y + this.player.playerSize.h > elm.spritePos.y)) {
                     this.player.onSprite = 1
-                    console.log(this.player.onSprite)
             }
             
             
@@ -110,18 +116,29 @@ const shinobiApp = {
     this.sprites.forEach((elm) => {
         count++
         if (elm.isBullet === 1) {
-            for (let i = count - 2; i >= 0; i--){
-                if (this.sprites[i].spritePos.x > elm.spritePos.x - 15
-                    && this.sprites[i].spritePos.x < elm.spritePos.x + 15
-                    && this.sprites[i].spritePos.y < elm.spritePos.y + elm.spriteSize.h) {
-                    console.log(this.sprites[i].spritePos.x)
-                    console.log(elm.spritePos.x)
-                    elm.retire = 1
+            for (let i = count - 2; i >= 0; i--) {
+                if (this.sprites[i].constructor.name !== 'Enemy' || elm.fromEnemy !== 1) {
+                    if (elm.dirBullet === 1 && this.sprites[i].spritePos.x > elm.spritePos.x - 15
+                        && this.sprites[i].spritePos.x < elm.spritePos.x + 15
+                        && this.sprites[i].spritePos.y < elm.spritePos.y + elm.spriteSize.h) {
+                    
+                        elm.retire = 1
+                        if (this.sprites[i].constructor.name === 'Enemy')
+                            this.sprites[i].retire = 1
+                    }
+                    else if (elm.dirBullet === - 1 && this.sprites[i].spritePos.x + this.sprites[i].spriteSize.w > elm.spritePos.x - 5
+                        && this.sprites[i].spritePos.x < elm.spritePos.x + 5
+                        && this.sprites[i].spritePos.y < elm.spritePos.y + elm.spriteSize.h) {
+                    
+                        elm.retire = 1
+                        if (this.sprites[i].constructor.name === 'Enemy')
+                            this.sprites[i].retire = 1
+                    }
                 }
             }
         }
     })
-        return 0
+    return 0
     },
 
     movementLoop() {
@@ -139,8 +156,6 @@ const shinobiApp = {
                     if (elm.isBullet === 1) {
                         if (!this.checkBulletsColision())
                             elm.moveBullet()
-                        else
-                            alert("que si xoco empanao")
                     }
                     else
                         elm.move(this.player.playerSpeedX)
@@ -163,7 +178,7 @@ const shinobiApp = {
             }
             this.player.playerPos.y += this.player.playerSpeedY //movimiento vertical
             this.checkColisionY()
-            
+
         }
 
         if ( !this.player.onFloor) {
@@ -182,12 +197,31 @@ const shinobiApp = {
     
 
         this.player.draw()
-        this.sprites.forEach(elm => elm.draw())
+
+
+        this.sprites.forEach(elm => elm.draw(this.player.playerSize.w)) 
+
+        this.sprites.forEach(elm => {
+            if (elm.constructor.name === 'Enemy' && FRAMES % 30 === 0) {
+                this.createBullet(2, elm.spritePos.x, elm.spritePos.y)
+            }
+        })
+
+
         
     }, // KEYCODES
-    createBullet() {
-        this.bull = new Bullet(this.ctx, './images/shuriken1.png', this.player.playerPos.x + this.player.playerSize.w, this.player.playerPos.y, 10, 10)
-        this.sprites.push(this.bull)
+    createBullet(fromWho, posx, posy) {
+        if(fromWho === 1){
+            this.bull = new Bullet(this.ctx, './images/shuriken1.png', (this.player.playerPos.x + this.player.playerSize.w / 2 + this.player.playerDir * this.player.playerSize.w * 0.55), this.player.playerPos.y + this.player.playerSize.h / 4, 10, 10,)
+            this.bull.dirBullet = this.player.playerDir
+            this.sprites.push(this.bull)
+        }
+        else{
+            this.bull = new Bullet(this.ctx, './images/shuriken1.png', posx - 15, posy, 10, 10,)
+            this.bull.dirBullet = -1
+            this.bull.fromEnemy = 1
+            this.sprites.push(this.bull)
+        }
     },
     setEventListeners() {
         document.onkeydown = e => {
@@ -195,7 +229,7 @@ const shinobiApp = {
             e.keyCode === 37 ? this.player.move(-1, 5) : null
             e.keyCode === 39 ? this.player.move(+1, 5) : null
             e.keyCode === 32 && (this.player.onFloor || this.player.onSprite) ? this.player.jump() : null
-            e.keyCode === 65 ? this.createBullet() : null
+            e.keyCode === 65 ? this.createBullet(1) : null
         }
 
         document.onkeyup = e => {
