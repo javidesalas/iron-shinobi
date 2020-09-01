@@ -10,11 +10,11 @@ class Bullet extends Sprite {
             this.ctx.drawImage(this.spriteImg, this.spritePos.x, this.spritePos.y,  this.spriteSize.w , this.spriteSize.h)
         }
     }
-    moveBullet() {
+    moveBullet(playerSpeedX) {
         if(this.dirBullet === 1)
-            this.spritePos.x += 5
+            this.spritePos.x += 6 - playerSpeedX
         else
-            this.spritePos.x -= 5
+            this.spritePos.x -= 6 + playerSpeedX
     }
 
 }

@@ -38,7 +38,7 @@ const shinobiApp = {
 
         this.player = new Player(this.ctx, './images/player.png')
 
-        this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 250, canvasH - 105, 100, 100))
+        this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 350, canvasH - 105, 100, 100))
         this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 700, canvasH - 55, 50, 50))
         
         //this.sprites.push(new Enemy(this.ctx, './images/enemy.png', 400, canvasH - 155, 150, 150))
@@ -94,6 +94,7 @@ const shinobiApp = {
                 && (this.player.playerPos.y + this.player.playerSize.h > elm.spritePos.y) // Up
                 && (this.player.playerPos.y < elm.spritePos.y + elm.spriteSize.h)) { // Right
                  
+                // If colision is detected and is from enemy => "game over", if is from obstacle => reposition player
                     if (this.player.playerPos.y + this.player.playerSize.h > elm.spritePos.y - 2 // Up
                     && this.player.playerPos.y < elm.spritePos.y + elm.spriteSize.h + 2) {
                         this.player.collidesX = 1
@@ -133,11 +134,13 @@ const shinobiApp = {
                     this.player.playerPos.y = elm.spritePos.y -this.player.playerSize.h -2
                 }
             }
-            if ((this.player.playerPos.y + this.player.playerSize.h < elm.spritePos.y +5)
+            if ((this.player.playerPos.y + this.player.playerSize.h < elm.spritePos.y + 5)
                 && (this.player.playerPos.y + this.player.playerSize.h > elm.spritePos.y)) {
-                    this.player.onSprite = 1
+                this.player.onSprite = 1
+                //     if (this.player.isCrouched === 1)
+                //         this.player.playerPos.y = elm.spritePos.y - this.player.playerSize.h / 2 -2
+                // }
             }
-            
             
         });
     },
@@ -159,7 +162,8 @@ const shinobiApp = {
                     }
                     else if (elm.dirBullet === - 1 && this.sprites[i].spritePos.x + this.sprites[i].spriteSize.w > elm.spritePos.x - 5
                         && this.sprites[i].spritePos.x < elm.spritePos.x + 5
-                        && this.sprites[i].spritePos.y < elm.spritePos.y + elm.spriteSize.h) {
+                        && this.sprites[i].spritePos.y < elm.spritePos.y + elm.spriteSize.h
+                        && this.sprites[i].spritePos.y + this.sprites[i].spriteSize.h > elm.spritePos.y){
                     
                         elm.retire = 1
                         if (this.sprites[i].constructor.name === 'Enemy')
@@ -186,7 +190,7 @@ const shinobiApp = {
                 this.sprites.forEach((elm, index) => {
                     if (elm.isBullet === 1) {
                         if (!this.checkBulletsColision())
-                        elm.moveBullet()
+                        elm.moveBullet(this.player.playerSpeedX)
                     }
                     else {
                         elm.move(this.player.playerSpeedX)
@@ -219,7 +223,7 @@ const shinobiApp = {
 
         }
 
-        if ( !this.player.onFloor) {
+        if (!this.player.onFloor) {
             this.player.playerSpeedY+= 1.5 //gravedad
         }
 
@@ -253,7 +257,7 @@ const shinobiApp = {
     }, // KEYCODES
     createBullet(fromWho, posx, posy) {
         if(fromWho === 1){
-            this.bull = new Bullet(this.ctx, './images/shuriken1.png', (this.player.playerPos.x + this.player.playerSize.w / 2 + this.player.playerDir * this.player.playerSize.w * 0.55), this.player.playerPos.y + this.player.playerSize.h / 4, 10, 10,)
+            this.bull = new Bullet(this.ctx, './images/shuriken1.png', (this.player.playerPos.x + this.player.playerSize.w / 2 + this.player.playerDir * this.player.playerSize.w * 0.60), this.player.playerPos.y + this.player.playerSize.h / 4, 10, 10,)
             this.bull.dirBullet = this.player.playerDir
             this.sprites.push(this.bull)
         }

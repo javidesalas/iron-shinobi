@@ -31,8 +31,7 @@ class Player {
             this.playerSize.h = 100
             this.onFloor = 0
             this.onSprite = 0
-            this.playerSpeedY += 100
-
+            this.playerSpeedY += 20
         }
         else {
             this.playerSize.h = 200
