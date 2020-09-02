@@ -75,7 +75,7 @@ const shinobiApp = {
             this.movementLoop()
             this.drawLoop()
             this.sprites
-        }, 30)  
+        }, 30)
 
     },
 
@@ -182,9 +182,16 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
                 if ((this.player.playerPos.x + this.player.playerSize.w > elm.spritePos.x ) // Left
                 && (this.player.playerPos.x < elm.spritePos.x + elm.spriteSize.w)) {
                     if (elm.fromEnemy === 1 || elm.constructor.name === 'Enemy')
-                    alert("GAME OVER")
+                        alert("GAME OVER")
+                    this.player.playerPos.y = elm.spritePos.y - this.player.playerSize.h - 2
                     this.player.collidesY = 1
-                    this.player.playerPos.y = elm.spritePos.y -this.player.playerSize.h -2
+                    if  (this.player.isCrouched === 1) {
+                        this.player.playerPos.y = elm.spritePos.y - this.player.playerSize.h + 30
+
+                        /****************************RETOCAR********************************* */
+                    }
+                        
+                   
                 }
             }
             if ((this.player.playerPos.y + this.player.playerSize.h < elm.spritePos.y + 5)
@@ -289,10 +296,6 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
 
     drawLoop() {
         //background
-        this.ctx.fillStyle = 'grey'
-        this.ctx.fillRect(0, 0, this.canvasSize.w, this.canvasSize.h)
-
-        
         this.ctx.drawImage(this.fuji, 0, 0)
         this.background.draw(this.mapX)
     
@@ -312,18 +315,34 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
             }
         })
 
-
+        this.ctx.fillStyle = 'white'
+        this.ctx.fillRect(this.canvasSize.w - 250 , this.canvasSize.h - 590, 225, 30)
         
     }, // KEYCODES
-    // atack() {
-    //     this.sprites.forEach((elm) => {
-    //         if (elm.spritePos.x + this.player.playerSize.w > this.player.playerPos.x - 50)
-                
-            
-            
-    //     })
-    //         this.createBullet(1)
-    // },
+    attack() {
+        this.sprites.forEach((elm) => {
+            if ((this.player.playerPos.x + (this.player.playerSpeedX ) + this.player.playerSize.w + 300 > elm.spritePos.x ) // Left
+            && ((this.player.playerPos.x + (this.player.playerSpeedX) - 300 < elm.spritePos.x + elm.spriteSize.w)) // Right
+            && (this.player.playerPos.y + this.player.playerSize.h > elm.spritePos.y) // Up
+            && (this.player.playerPos.y < elm.spritePos.y + elm.spriteSize.h)
+                && elm.constructor.name === 'Enemy') {
+                this.player.swordAttack = 1
+                this.player.startAnim = FRAMES
+                elm.retire = 1
+            }
+        })
+        if (this.player.swordAttack === 0) {
+            this.createBullet(1)
+            this.player.bulletAttack = 1
+            this.player.startAnim = FRAMES
+        }
+        else
+            this.swordAttack()
+
+    },
+    swordAttack() {
+        
+    },
     createBullet(fromWho, posx, posy, enemyDir) {
         if(fromWho === 1){
             this.bull = new Bullet(this.ctx, './images/shuriken1.png', (this.player.playerPos.x + this.player.playerSize.w / 2 + this.player.playerDir * this.player.playerSize.w * 0.60), this.player.playerPos.y + this.player.playerSize.h / 4, 10, 10,)
@@ -349,7 +368,8 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
             e.keyCode === 39 ? this.player.move(+1, 5) : null
             e.keyCode === 32 && (this.player.onFloor || this.player.onSprite) ? this.player.jump() : null
             e.keyCode === 40 && (this.player.onFloor || this.player.onSprite) ? this.player.isCrouched = 1 : null
-            e.keyCode === 65 ? this.createBullet(1) : null
+            e.keyCode === 65 ? this.attack() : null
+           
         }
 
         document.onkeyup = e => {

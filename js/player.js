@@ -15,6 +15,9 @@ class Player {
         this.playerDir = 1
         this.onFloor = 1
         this.onSprite = 1
+        this.swordAttack = 0
+        this.bulletAttack = 0
+        this.startAnim = 0
         this.collidesX = 0
         this.collidesY = 0
         this.initPlayer(img)
@@ -52,13 +55,29 @@ class Player {
      }
      selectLook() {
          let chosenLook = 100
-         if (!this.onFloor && !this.onSprite) {
-             chosenLook = 500
-         } else if (this.playerSpeedX != 0) {
-             chosenLook = 900
-         } else {
-             chosenLook =100
-         }
+         
+        if (this.swordAttack === 1) {
+             chosenLook = 1300
+             if (this.startAnim + 20 <= FRAMES) {
+                 this.swordAttack = 0
+             }
+        }
+        else if (this.bulletAttack === 1) {
+            chosenLook = 1300
+            if (this.startAnim + 20 <= FRAMES) {
+                this.bulletAttack = 0
+            }
+        }
+        else if (!this.onFloor && !this.onSprite) {
+            chosenLook = 500
+        }
+        else if (this.playerSpeedX != 0) {
+            chosenLook = 900
+        }
+        else {
+            chosenLook =100
+        }
+         
          chosenLook += this.playerDir * 100
          return chosenLook
      }
