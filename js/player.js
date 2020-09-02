@@ -40,7 +40,7 @@ class Player {
             this.playerSize.h = 150
             }
         this.ctx.drawImage(this.playerImg, drawOriginX, drawOriginY, 200, 200, this.playerPos.x, this.playerPos.y,  this.playerSize.w , this.playerSize.h)
-            console.log(this.playerPos.y, this.playerSize.h, this.playerSpeedY )
+           
     
     }
     selectFrame() {

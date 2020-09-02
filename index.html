@@ -8,11 +8,14 @@
     <title>Race Car</title>
   </head>
   <body>
-      <canvas id="gameCanvas" height="600" width="900"></canvas>
-      <div id='audios'>
-        <audio src="./audios/gameMusic.mp3" id="music" autoplay loop ></audio>
+    <div id='audios'>
+      <audio src="./audios/gameMusic.mp3" id="music" autoplay></audio>
+      <audio src="./audios/jump.mp3" id="jump"></audio>
+      <audio src="./audios/muerte.mp3" id="dead"></audio>
+      <audio src="./audios/swordAttack.mp3" id="sword"></audio>    
 
-      </div>
+    </div>
+    <canvas id="gameCanvas" class="game" height="600" width="900"></canvas>
         <script type="text/javascript" src="js/player.js"></script>
         <script type="text/javascript" src="js/background.js"></script>          
         <script type="text/javascript" src="js/decoration.js"></script>

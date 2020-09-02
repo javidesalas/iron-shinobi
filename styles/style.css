@@ -6,5 +6,9 @@ body {
 }
 
 #audios {
- 
-}
+    display:none
+ }
+
+ .game {
+     background-image: url(../images/welcome.png);
+ }

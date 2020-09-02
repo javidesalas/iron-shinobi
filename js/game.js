@@ -39,23 +39,29 @@ const shinobiApp = {
         h : 150
     },
     floorY : 40,
-    audios: [],
+    sounds: [],
     music: undefined,
     
 
     init(){
         this.canvasId = 'gameCanvas'
         this.ctx = document.getElementById(this.canvasId).getContext('2d')
+        this.ctx.fillStyle = 'white'
+        this.ctx.fillRect(this.canvasSize.w - 250 , this.canvasSize.h - 590, 225, 30)
 
         
-        this.welcomeScreen = new Image
-        this.welcomeScreen.src = './images/welcome.png'
-        this.ctx.drawImage(this.welcomeScreen, 0, 0)
-        
+               
         this.music = document.getElementById('music')
-        
+        this.music.play()
+        this.music.volume -= 0.3
+
+        this.sounds.push(document.getElementById('jump'))
+        this.sounds.push(document.getElementById('sword'))
+        this.sounds.push(document.getElementById('dead'))
+
         this.fuji = new Image
         this.fuji.src = './images/fuji.png'
+        
         this.background = new Background(this.ctx, './images/background.png')
 
         this.decorations.push(new Decoration(this.ctx,'./images/tree.png',-700, 75, 450, 450))
@@ -74,7 +80,7 @@ const shinobiApp = {
        
        this.setEventListeners()
        
-       
+       this.gameOn()
         
         //this.bull = new Bullet(this.ctx, './images/shuriken1.png', this.player.playerPos.x + this.player.playerSize.w, this.player.playerPos.y, 10, 10)
         
@@ -382,11 +388,14 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
            // alert('entra down')
             e.keyCode === 37 ? this.player.move(-1, 5) : null
             e.keyCode === 39 ? this.player.move(+1, 5) : null
-            e.keyCode === 32 && (this.player.onFloor || this.player.onSprite) ? this.player.jump() : null
+            if (e.keyCode === 32 && (this.player.onFloor || this.player.onSprite)) {
+                this.player.jump() 
+                this.sounds[0].play()
+            } 
             e.keyCode === 40 && (this.player.onFloor || this.player.onSprite) ? this.player.isCrouched = 1 : null
             e.keyCode === 65 ? this.attack() : null
             if (e.keyCode === 13) {
-                this.gameOn()
+                
                 this.music.play()
             }
         }
