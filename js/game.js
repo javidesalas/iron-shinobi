@@ -87,7 +87,7 @@ const shinobiApp = {
     this.decorations.push(new Decoration(this.ctx,'./images/tori.png',-700, 75, 450, 450))
     this.decorations.push(new Decoration(this.ctx,'./images/transparent.png',-700, 75, 450, 450))
 
-    //this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 575, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+    this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 575, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
     this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1100, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
     this.sprites.push(new Sprite (this.ctx,'./images/transparent.png', 1250, 260, 675, 15 )) // plataforma árboles
     //this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1540, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
@@ -305,14 +305,26 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
 
         this.sprites.forEach(elm => {
             if (elm.constructor.name === 'Enemy' && FRAMES % 100 === 0) {
-                this.createBullet(2, elm.spritePos.x, elm.spritePos.y)
+                if(elm.enemyDir === 1)
+                    this.createBullet(2, elm.spritePos.x + elm.spriteSize.w, elm.spritePos.y + 25, elm.enemyDir)
+                if (elm.enemyDir === -1)
+                    this.createBullet(2, elm.spritePos.x, elm.spritePos.y + 25, elm.enemyDir)
             }
         })
 
 
         
     }, // KEYCODES
-    createBullet(fromWho, posx, posy) {
+    // atack() {
+    //     this.sprites.forEach((elm) => {
+    //         if (elm.spritePos.x + this.player.playerSize.w > this.player.playerPos.x - 50)
+                
+            
+            
+    //     })
+    //         this.createBullet(1)
+    // },
+    createBullet(fromWho, posx, posy, enemyDir) {
         if(fromWho === 1){
             this.bull = new Bullet(this.ctx, './images/shuriken1.png', (this.player.playerPos.x + this.player.playerSize.w / 2 + this.player.playerDir * this.player.playerSize.w * 0.60), this.player.playerPos.y + this.player.playerSize.h / 4, 10, 10,)
             this.bull.dirBullet = this.player.playerDir
@@ -321,6 +333,11 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
         else{
             this.bull = new Bullet(this.ctx, './images/shuriken1.png', posx - 15, posy, 10, 10,)
             this.bull.dirBullet = -1
+            if(enemyDir === 1)
+                this.bull.dirBullet = 1
+            if (enemyDir === -1)
+                this.bull.dirBullet = -1
+
             this.bull.fromEnemy = 1
             this.sprites.push(this.bull)
         }
