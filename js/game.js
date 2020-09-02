@@ -1,6 +1,6 @@
 
 let canvasH = 600
-let canvasW = 800
+let canvasW = 900
 let FRAMES = 0
 
 const shinobiApp = {
@@ -26,6 +26,17 @@ const shinobiApp = {
     frames: 0,
     speed : 1,
     mapFlag : [0,0,0],
+    mapLeftLimit: 0,
+    basicObstacleSize: {
+        w : 125,
+        h : 125
+    },
+    basicEnemySize: {
+        w : 125,
+        h : 150
+    },
+    floorY : 40,
+
     init(){
         this.canvasId = 'gameCanvas'
         this.ctx = document.getElementById(this.canvasId).getContext('2d')
@@ -34,15 +45,18 @@ const shinobiApp = {
         this.fuji.src = './images/fuji.png'
         this.background = new Background(this.ctx, './images/background.png')
 
-        this.decorations.push(new Decoration(this.ctx,'./images/tree.png',700, 75, 450, 450))
+        this.decorations.push(new Decoration(this.ctx,'./images/tree.png',-700, 75, 450, 450))
+        this.decorations.push(new Decoration(this.ctx,'./images/tori.png',-700, 75, 450, 450))
+        this.decorations.push(new Decoration(this.ctx,'./images/tori.png',-700, 75, 450, 450))
+
 
         this.player = new Player(this.ctx, './images/player.png')
 
-        this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 350, canvasH - 105, 100, 100))
-        this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 700, canvasH - 55, 50, 50))
+        this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', -700, canvasH - 105, 100, 100))
+       // this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 700, canvasH - 55, 50, 50))
         
         //this.sprites.push(new Enemy(this.ctx, './images/enemy.png', 400, canvasH - 155, 150, 150))
-      
+       // this.manageMap()
         this.gameOn()
         
         //this.bull = new Bullet(this.ctx, './images/shuriken1.png', this.player.playerPos.x + this.player.playerSize.w, this.player.playerPos.y, 10, 10)
@@ -66,26 +80,65 @@ const shinobiApp = {
     },
 
     manageMap(){
-        //Call instances for sprites and decoration close to the player 
-        if (this.mapX > 900 && this.mapFlag[0] === 0) {
-            this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1200, canvasH - 355, 150, 150))
-            this.mapFlag[0] = 1
-        }
+            //Call instances for sprites and decoration close to the player 
+   if (this.mapX > -5 && this.mapFlag[0] === 0) {
+       //primera tanda fuera de pantalla para inicializar imágenes
+    this.decorations.push(new Decoration(this.ctx,'./images/tree.png',-700, 75, 450, 450))
+    this.decorations.push(new Decoration(this.ctx,'./images/tori.png',-700, 75, 450, 450))
+    this.decorations.push(new Decoration(this.ctx,'./images/transparent.png',-700, 75, 450, 450))
 
-        //Remove sprites and decoration far from the player 
-        this.sprites.forEach ( elm => {
-            if (elm.spritePos.x < -1600) {
-                elm.retire = 1
-            }
-        })
-        this.decorations.forEach ( elm => {
-            if (elm.decoPos.x < -1600) {
-                elm.retire = 1
-            }
-        })
-        this.sprites = this.sprites.filter((elm) => elm.retire === 0)
-        this.decorations = this.decorations.filter((elm) => elm.retire === 0)
-    },
+    //this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 575, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+    this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1100, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
+    this.sprites.push(new Sprite (this.ctx,'./images/transparent.png', 1250, 260, 675, 15 )) // plataforma árboles
+    //this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1540, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+    
+    this.decorations.push( new Decoration (this.ctx, './images/tree.png', 1230, 60, 450, 500))
+    this.decorations.push( new Decoration (this.ctx, './images/tree.png', 1530, 60, 450, 500))       
+    
+    this.mapFlag[0] = 1
+}
+
+if (this.mapX > 1600 && this.mapFlag[1] === 0) {
+    this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1100, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+    this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1300, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
+    this.sprites.push(new Sprite (this.ctx,'./images/transparent.png', 1500, 260, 980, 15 )) // plataforma árboles
+
+    this.decorations.push( new Decoration (this.ctx, './images/tori.png', 1460, 250, 345, 275))
+    this.decorations.push( new Decoration (this.ctx, './images/tori.png', 1800, 250, 345, 275))
+    this.decorations.push( new Decoration (this.ctx, './images/tori.png', 2140, 250, 345, 275))
+
+    this.mapFlag[1] = 1
+}
+
+if (this.mapX > 2400 && this.mapFlag[2] === 0) {
+   this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 900, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+   this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1400, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+   this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1400, 75, this.basicEnemySize.w, this.basicEnemySize.h))
+   this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1800, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
+
+    this.mapFlag[2] = 1
+} 
+
+//Remove sprites and decoration far from the player 
+this.sprites.forEach ( elm => {
+    if (elm.spritePos.x < -1600) {
+        elm.retire = 1
+    }
+})
+this.decorations.forEach ( elm => {
+    if (elm.decoPos.x < -1600) {
+        elm.retire = 1
+    }
+})
+this.sprites = this.sprites.filter((elm) => elm.retire === 0)
+this.decorations = this.decorations.filter((elm) => elm.retire === 0)
+
+//Set new left limit
+//if (this.mapLeftLimit < this.mapX - 1600) {
+//    this.mapLeftLimit = this.mapX - 1600
+//}
+
+},
     
     checkColisionX() {
         this.sprites.forEach(elm => {
@@ -178,7 +231,7 @@ const shinobiApp = {
 
     movementLoop() {
         // limites laterales
-        if ((this.player.playerDir === -1 && this.mapX >= 0 + 20)
+        if ((this.player.playerDir === -1 && this.mapX >= this.mapLeftLimit + 200)
                 || (this.player.playerDir === 1 && this.mapX <= this.mapSize - this.player.playerSize.w - 20)){
             if(this.player.collidesX === 1) {
                 this.player.playerSpeedX = 0
@@ -207,8 +260,12 @@ const shinobiApp = {
       
         
         //limite suelo
-        if (this.player.playerPos.y + this.player.playerSpeedY > canvasH - this.player.playerSize.h -5) {
-            this.player.playerPos.y = canvasH - this.player.playerSize.h -5
+        if (this.player.playerPos.y + this.player.playerSpeedY > canvasH - this.floorY - this.player.playerSize.h ) {
+            this.player.playerPos.y = canvasH - this.player.playerSize.h - this.floorY
+            if  (this.player.isCrouched) {
+                this.player.playerPos.y += 40 
+            }
+            
             this.player.playerSpeedY = 0
             this.player.onFloor = 1
         }
@@ -247,7 +304,7 @@ const shinobiApp = {
         this.sprites.forEach(elm => elm.draw(this.player.playerSize.w)) 
 
         this.sprites.forEach(elm => {
-            if (elm.constructor.name === 'Enemy' && FRAMES % 30 === 0) {
+            if (elm.constructor.name === 'Enemy' && FRAMES % 100 === 0) {
                 this.createBullet(2, elm.spritePos.x, elm.spritePos.y)
             }
         })

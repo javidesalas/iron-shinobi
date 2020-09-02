@@ -27,17 +27,17 @@ class Player {
         let drawOriginX = 200 * this.selectFrame()
         let drawOriginY = this.selectLook()
         if (this.isCrouched === 1) {
-            drawOriginY = 900 + 100 * this.playerDir
-            this.playerSize.h = 100
+            drawOriginY = 1759 + 100 * this.playerDir
+            this.playerSize.h = 110
             this.onFloor = 0
             this.onSprite = 0
-            this.playerSpeedY += 20
+            this.playerSpeedY += 5
         }
         else {
-            this.playerSize.h = 200
+            this.playerSize.h = 150
             }
         this.ctx.drawImage(this.playerImg, drawOriginX, drawOriginY, 200, 200, this.playerPos.x, this.playerPos.y,  this.playerSize.w , this.playerSize.h)
-    
+            console.log(this.playerPos.y, this.playerSize.h, this.playerSpeedY )
     
     }
     selectFrame() {
