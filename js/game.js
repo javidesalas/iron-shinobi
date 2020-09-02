@@ -15,6 +15,9 @@ const shinobiApp = {
         w: canvasW,
         h: canvasH
     },
+
+    welcomeScreen: undefined,
+
     mapX: 0,
     mapSize: 10000,
     background: undefined,
@@ -36,10 +39,20 @@ const shinobiApp = {
         h : 150
     },
     floorY : 40,
+    audios: [],
+    music: undefined,
+    
 
     init(){
         this.canvasId = 'gameCanvas'
         this.ctx = document.getElementById(this.canvasId).getContext('2d')
+
+        
+        this.welcomeScreen = new Image
+        this.welcomeScreen.src = './images/welcome.png'
+        this.ctx.drawImage(this.welcomeScreen, 0, 0)
+        
+        this.music = document.getElementById('music')
         
         this.fuji = new Image
         this.fuji.src = './images/fuji.png'
@@ -57,7 +70,11 @@ const shinobiApp = {
         
         //this.sprites.push(new Enemy(this.ctx, './images/enemy.png', 400, canvasH - 155, 150, 150))
        // this.manageMap()
-        this.gameOn()
+
+       
+       this.setEventListeners()
+       
+       
         
         //this.bull = new Bullet(this.ctx, './images/shuriken1.png', this.player.playerPos.x + this.player.playerSize.w, this.player.playerPos.y, 10, 10)
         
@@ -65,7 +82,6 @@ const shinobiApp = {
 
     gameOn() {
         
-        this.setEventListeners()
         setInterval(() => {
             FRAMES++
             if (FRAMES > 10000) FRAMES = 0
@@ -87,7 +103,7 @@ const shinobiApp = {
     this.decorations.push(new Decoration(this.ctx,'./images/tori.png',-700, 75, 450, 450))
     this.decorations.push(new Decoration(this.ctx,'./images/transparent.png',-700, 75, 450, 450))
 
-    this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 575, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+    //this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 575, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
     this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1100, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
     this.sprites.push(new Sprite (this.ctx,'./images/transparent.png', 1250, 260, 675, 15 )) // plataforma árboles
     //this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1540, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
@@ -369,7 +385,10 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
             e.keyCode === 32 && (this.player.onFloor || this.player.onSprite) ? this.player.jump() : null
             e.keyCode === 40 && (this.player.onFloor || this.player.onSprite) ? this.player.isCrouched = 1 : null
             e.keyCode === 65 ? this.attack() : null
-           
+            if (e.keyCode === 13) {
+                this.gameOn()
+                this.music.play()
+            }
         }
 
         document.onkeyup = e => {
