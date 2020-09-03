@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #ccc;
+    background-color: rgb(49, 19, 19);
     display: flex;
     justify-items: center;
     align-content: center;
@@ -13,24 +13,46 @@ header {
 }
 
 .pregame {
-    background-color: tomato;
+  animation-duration: 3s;
+  animation-name: fire;
+  animation-iteration-count: infinite;
+    /* background: linear-gradient(#f29100 , #cc0000 , #1f0203 90%) no-repeat #1f0203; */
+    /* linear-gradient(#f29100, #580607) no-repeat #580607;            */
 
 }
 
-div .main {
+@keyframes fire {
+    from {
+        background: linear-gradient(#f29100, #580607) no-repeat #580607;
+    }
+    
+    to {
+     margin-left:0%;
+     width:100%;
+     background: linear-gradient(#f29100 , #cc0000 , #1f0203 90%) no-repeat #1f0203;
+   }
+}
+
+.main {
     width: 940;
     display: flex;
     flex-direction: column;
+    z-index: 1;
 
 }
 
 .left,
 .right {
-    width: 300px;
+    width: 150px;
     height: 600px;
     padding: 10px;
     margin: 100px auto;
     
+}
+
+.left img,
+.right img {
+    width: 150px
 }
 
 
