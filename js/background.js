@@ -4,7 +4,7 @@ class Background {
         this.ctx = ctx
         this.src = img
         this.bgPos = {
-            x: 0,
+            x: -100,
             y: 0
         }
         this.bgImg = undefined

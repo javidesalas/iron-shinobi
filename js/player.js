@@ -6,7 +6,7 @@ class Player {
             h: 150,
         }
         this.playerPos = {
-            x: 150,
+            x: 300,
             y: canvasH - this.playerSize.h
         }
         this.playerImg = undefined
@@ -30,7 +30,7 @@ class Player {
         let drawOriginX = 200 * this.selectFrame()
         let drawOriginY = this.selectLook()
         if (this.isCrouched === 1) {
-            drawOriginY = 1759 + 100 * this.playerDir
+            drawOriginY = 2162+ 100 * this.playerDir
             this.playerSize.h = 110
             this.onFloor = 0
             this.onSprite = 0
@@ -39,10 +39,22 @@ class Player {
         else {
             this.playerSize.h = 150
             }
-        this.ctx.drawImage(this.playerImg, drawOriginX, drawOriginY, 200, 200, this.playerPos.x, this.playerPos.y,  this.playerSize.w , this.playerSize.h)
-           
-    
+
+        if (this.swordAttack === 1 && this.isCrouched === 0){
+            if (this.playerDir === -1)
+                drawOriginY = 1600
+            else
+                drawOriginY = 1800
+
+            if (drawOriginX === 200)
+                drawOriginX = 400    
+            this.ctx.drawImage(this.playerImg, drawOriginX, drawOriginY, 400, 200, this.playerPos.x-100, this.playerPos.y,  300 , 150)
+        }
+        else
+            this.ctx.drawImage(this.playerImg, drawOriginX, drawOriginY, 200, 200, this.playerPos.x, this.playerPos.y,  this.playerSize.w , this.playerSize.h)
+        
     }
+
     selectFrame() {
          let chosenFrame = 0
          if (FRAMES % 20 <= 10) {

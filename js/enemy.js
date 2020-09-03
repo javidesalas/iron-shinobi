@@ -5,7 +5,7 @@ class Enemy extends Sprite{
     }
     move(playerSpeedX) {
         this.spritePos.x -= playerSpeedX
-        if (FRAMES % 500 >= 250)
+        if (FRAMES % 400 <= 200)
             this.enemyDir = -1
         else 
             this.enemyDir = 1
