@@ -5,18 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="styles/style.css" />
-    <title>Race Car</title>
+    <title>Iron Shinobi</title>
   </head>
   <body>
+    
+    <div class="column left">
+      <img src="./images/templo-izda.png" alt="Japanese temple">   
+    </div>
+    
+    <div class="main">
+      <header>
+        <h1>Iron Shinobi</h1>
+      </header>
+      <canvas id="gameCanvas" class="game" height="600" width="900"></canvas>
+      <footer>
+        credits
+        Instructions
+      </footer>
+    </div>
+    
+    <div class="column right">
+      <img src="./images/templo-dcha.png" alt="Japanese temple">
+    </div>
+    
+    
     <div id='audios'>
       <audio src="./audios/gameMusic.mp3" id="music" autoplay></audio>
       <audio src="./audios/jump.mp3" id="jump"></audio>
       <audio src="./audios/muerte.mp3" id="dead"></audio>
       <audio src="./audios/swordAttack.mp3" id="sword"></audio>    
-
     </div>
-    <canvas id="gameCanvas" class="game" height="600" width="900"></canvas>
-        <script type="text/javascript" src="js/player.js"></script>
+    <script type="text/javascript" src="js/player.js"></script>
         <script type="text/javascript" src="js/background.js"></script>          
         <script type="text/javascript" src="js/decoration.js"></script>
         <script type="text/javascript" src="js/sprite.js"></script>
