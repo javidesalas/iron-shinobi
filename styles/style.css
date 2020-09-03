@@ -12,6 +12,11 @@ header {
     margin-top: 50px;
 }
 
+.pregame {
+    background-color: tomato;
+
+}
+
 div .main {
     width: 940;
     display: flex;
