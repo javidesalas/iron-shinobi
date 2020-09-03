@@ -18,7 +18,7 @@ class Decoration {
         this.decoImg = new Image
         this.decoImg.src = img
     }
-    draw(mapx) {
+    draw() {
         this.ctx.drawImage(this.decoImg, this.decoPos.x, this.decoPos.y,  this.decoSize.w , this.decoSize.h)
         if(this.decoPos < -2* canvasW) this.retire = 1
     }
