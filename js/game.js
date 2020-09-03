@@ -1,4 +1,3 @@
-
 let canvasH = 600
 let canvasW = 900
 let FRAMES = 0
@@ -43,6 +42,7 @@ const shinobiApp = {
     music: undefined,
     points: 0,
     dead: 0,
+    gameOver: undefined,
 
     init(){
         this.canvasId = 'gameCanvas'
@@ -52,13 +52,16 @@ const shinobiApp = {
 
         
                
+        this.fuego = document.getElementById('fuego')
+        this.fuego.play()
         this.music = document.getElementById('music')
         this.music.play()
-        this.music.volume -= 0.3
+        this.music.volume = 0.3
 
         this.sounds.push(document.getElementById('jump'))
         this.sounds.push(document.getElementById('sword'))
         this.sounds.push(document.getElementById('dead'))
+        this.sounds.push(document.getElementById('game-over'))
 
         this.fuji = new Image
         this.fuji.src = './images/fuji.png'
@@ -77,6 +80,8 @@ const shinobiApp = {
         
         //this.sprites.push(new Enemy(this.ctx, './images/enemy.png', 400, canvasH - 155, 150, 150))
        // this.manageMap()
+       this.gameOver = new Image
+       this.gameOver.src = './images/continue.png'
 
        
        this.setEventListeners()
@@ -352,10 +357,14 @@ if (this.mapLeftLimit < this.mapX - 1600) {
         this.ctx.strokeText(` 1P    KILLS: ${this.points}     TIME: ${Math.round(FRAMES / 30)}`, this.canvasSize.w - 260, this.canvasSize.h - 567)
         if (this.dead > 0)
         {
-            this.ctx.font = '20px'
-            this.ctx.strokeText(`YOU DEAD`, this.canvasSize.w / 2, (this.canvasSize.h / 2) - 30 )
-            this.ctx.font = 'Italic 20px Arabic'
-            this.ctx.strokeText(` 1P    KILLS: ${this.points}     TIME: ${Math.round(this.dead / 30)}`, this.canvasSize.w / 2, this.canvasSize.h / 2)
+            this.ctx.drawImage(this.gameOver, this.canvasSize.w / 5, this.canvasSize.h / 5)
+            this.ctx.font = 'Italic 40px Arabic'
+            this.ctx.strokeText(`${this.points}`, this.canvasSize.w / 2 - 100, (this.canvasSize.h / 2) - 12)
+            this.ctx.strokeText(`${Math.round(this.dead / 30)}`, this.canvasSize.w / 2 - 100, (this.canvasSize.h / 2) + 25)
+            this.player.playerPos.x -= 5
+            this.player.playerPos.y -= 2
+            // this.ctx.drawImage(this.player.playerImg, this.player.playerPos.x - 50, this.player.playerPos.y - 50,  this.player.playerSize.w , this.player.playerSize.h)
+            //    TIME: ${Math.round(this.dead / 30)}`, this.canvasSize.w / 2, this.canvasSize.h / 2)
         }
         
     }, // KEYCODES
@@ -382,6 +391,9 @@ if (this.mapLeftLimit < this.mapX - 1600) {
     },
     playerDead() {
         this.dead = FRAMES
+        this.music.pause()
+        this.sounds[3].play()
+        this.sounds[3].volume = 0.35
         document.onkeydown = e => { 
             e.keyCode === 13 ? location.reload(true) : null
         }
@@ -415,10 +427,6 @@ if (this.mapLeftLimit < this.mapX - 1600) {
             } 
             e.keyCode === 40 && (this.player.onFloor || this.player.onSprite) ? this.player.isCrouched = 1 : null
             e.keyCode === 65 ? this.attack() : null
-            if (e.keyCode === 13) {
-                
-                this.music.play()
-            }
         }
 
         document.onkeyup = e => {
@@ -430,9 +438,4 @@ if (this.mapLeftLimit < this.mapX - 1600) {
     },
 
 };
-
-
-
-
-
 
