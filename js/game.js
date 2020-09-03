@@ -41,7 +41,7 @@ const shinobiApp = {
     floorY : 40,
     sounds: [],
     music: undefined,
-    
+    point: 0,
 
     init(){
         this.canvasId = 'gameCanvas'
@@ -140,7 +140,7 @@ if (this.mapX > 2400 && this.mapFlag[2] === 0) {
 
     this.mapFlag[2] = 1
 } 
-
+this.points += this.sprites.filter((elm) => elm.retire === 1 && elm.constructor.name === "Enemy").length
 //Remove sprites and decoration far from the player 
 this.sprites.forEach ( elm => {
     if (elm.spritePos.x < -1600) {
@@ -175,7 +175,7 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
                         this.player.collidesX = 1
                         const protection = 5
                         if (elm.fromEnemy === 1 || elm.constructor.name === 'Enemy')
-                            alert("GAME OVER")
+                            this.playerDead()
                         if (this.player.playerDir === 1) {
                             this.sprites.forEach(elm => {
                                 elm.spritePos.x += protection
@@ -203,10 +203,12 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
             && (this.player.playerPos.y + (this.player.playerSpeedY) < elm.spritePos.y + elm.spriteSize.h)) { // Right
                 if ((this.player.playerPos.x + this.player.playerSize.w > elm.spritePos.x ) // Left
                 && (this.player.playerPos.x < elm.spritePos.x + elm.spriteSize.w)) {
-                    if (elm.fromEnemy === 1 || elm.constructor.name === 'Enemy')
-                        alert("GAME OVER")
-                    this.player.playerPos.y = elm.spritePos.y - this.player.playerSize.h - 2
                     this.player.collidesY = 1
+                    if (elm.fromEnemy === 1 || elm.constructor.name === 'Enemy') {
+                        this.playerDead()
+                        this.player.collidesY = 0
+                    }
+                    this.player.playerPos.y = elm.spritePos.y - this.player.playerSize.h - 2
                     if  (this.player.isCrouched === 1) {
                         this.player.playerPos.y = elm.spritePos.y - this.player.playerSize.h + 30
 
@@ -239,8 +241,10 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
                         && this.sprites[i].spritePos.y + this.sprites[i].spriteSize.h > elm.spritePos.y) {
                     
                         elm.retire = 1
-                        if (this.sprites[i].constructor.name === 'Enemy')
+                        if (this.sprites[i].constructor.name === 'Enemy') {
                             this.sprites[i].retire = 1
+                            this.sounds[2].play()
+                        }
                     }
                     else if (elm.dirBullet === - 1 && this.sprites[i].spritePos.x + this.sprites[i].spriteSize.w > elm.spritePos.x - 5
                         && this.sprites[i].spritePos.x < elm.spritePos.x + 5
@@ -248,8 +252,10 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
                         && this.sprites[i].spritePos.y + this.sprites[i].spriteSize.h > elm.spritePos.y){
                     
                         elm.retire = 1
-                        if (this.sprites[i].constructor.name === 'Enemy')
+                        if (this.sprites[i].constructor.name === 'Enemy') {
                             this.sprites[i].retire = 1
+                            this.sounds[2].play()
+                        }
                     }
                 }
             }
@@ -265,7 +271,6 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
             if(this.player.collidesX === 1) {
                 this.player.playerSpeedX = 0
                 this.player.collidesX = 0
-                
             }
             else {
                 
@@ -280,7 +285,6 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
                         this.decorations.forEach(elm => elm.move(this.player.playerSpeedX))
                     }
                 })
-                
                 this.checkColisionX()
                 this.mapX += this.player.playerSpeedX
             }
@@ -334,6 +338,7 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
                     this.createBullet(2, elm.spritePos.x + elm.spriteSize.w, elm.spritePos.y + 25, elm.enemyDir)
                 if (elm.enemyDir === -1)
                     this.createBullet(2, elm.spritePos.x, elm.spritePos.y + 25, elm.enemyDir)
+                    this.sounds[1].play()
             }
         })
 
@@ -343,27 +348,30 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
     }, // KEYCODES
     attack() {
         this.sprites.forEach((elm) => {
-            if ((this.player.playerPos.x + (this.player.playerSpeedX ) + this.player.playerSize.w + 300 > elm.spritePos.x ) // Left
-            && ((this.player.playerPos.x + (this.player.playerSpeedX) - 300 < elm.spritePos.x + elm.spriteSize.w)) // Right
+            if ((this.player.playerPos.x + (this.player.playerSpeedX ) + this.player.playerSize.w + 150 > elm.spritePos.x ) // Left
+            && ((this.player.playerPos.x + (this.player.playerSpeedX) - 150 < elm.spritePos.x + elm.spriteSize.w)) // Right
             && (this.player.playerPos.y + this.player.playerSize.h > elm.spritePos.y) // Up
             && (this.player.playerPos.y < elm.spritePos.y + elm.spriteSize.h)
                 && elm.constructor.name === 'Enemy') {
                 this.player.swordAttack = 1
+                this.sounds[1].play()
+                this.sounds[2].play()
                 this.player.startAnim = FRAMES
                 elm.retire = 1
             }
         })
         if (this.player.swordAttack === 0) {
             this.createBullet(1)
+            this.sounds[1].play()
             this.player.bulletAttack = 1
             this.player.startAnim = FRAMES
         }
-        else
-            this.swordAttack()
-
     },
-    swordAttack() {
+    playerDead() {
         
+        document.onkeydown = e => { 
+             e.keyCode === 13 ? location.reload(true) : null
+        }
     },
     createBullet(fromWho, posx, posy, enemyDir) {
         if(fromWho === 1){
