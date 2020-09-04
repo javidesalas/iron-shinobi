@@ -11,7 +11,8 @@ class Enemy extends Sprite{
         }
         else 
             this.spritePos.x += 2 * this.enemyDir
-    }
+    } 
+    /**************SELECT TIME TO CHANGE ENEMY IMG******************/
     selectFrame() {
         let chosenFrame = 0
         if (FRAMES % 20 <= 10) {
@@ -22,20 +23,9 @@ class Enemy extends Sprite{
         }
         return chosenFrame
     }
+      /******************SELECT PLAYER IMG *************************/
     selectLook() {
         let chosenLook = 100
-    //    if (this.enemyDir === 1) {
-    //         chosenLook = 1300
-    //         // if (this.startAnim + 20 <= FRAMES) {
-    //         //     this.swordAttack = 0
-    //         // }
-    //    }
-    //    else {
-    //        chosenLook = 1300
-    //     //    if (this.startAnim + 20 <= FRAMES) {
-    //     //        this.bulletAttack = 0
-    //     //    }
-    //    }
         chosenLook += this.enemyDir * 100
         return chosenLook
     }

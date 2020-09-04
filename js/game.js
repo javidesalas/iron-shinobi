@@ -21,8 +21,8 @@ const shinobiApp = {
     mapSize: 10000,
     background: undefined,
     player: undefined,
-    enemies: undefined,
-    sprites: [],
+    enemies: undefined, 
+    sprites: [], /*******************************************************/
     decorations: [],
     bull: undefined,
     frames: 0,
@@ -45,13 +45,15 @@ const shinobiApp = {
     youWin: undefined,
     gameOver: undefined,
 
-    init(){
+    init() {
+        
+        /*******************************CREATE CONTEXT & WINDOW FOR CANVAS *************************/
         this.canvasId = 'gameCanvas'
         this.ctx = document.getElementById(this.canvasId).getContext('2d')
         this.ctx.fillStyle = 'white'
         this.ctx.fillRect(this.canvasSize.w - 250 , this.canvasSize.h - 590, 225, 30)
 
-        
+        /***************************************AUDIO INSTANCES ************************************/
                
         this.fuego = document.getElementById('fuego')
         this.fuego.play()
@@ -64,6 +66,7 @@ const shinobiApp = {
         this.sounds.push(document.getElementById('dead'))
         this.sounds.push(document.getElementById('game-over'))
 
+        /********************************BACKGROUND & DECORATION INSTANCES *************************/
         this.fuji = new Image
         this.fuji.src = './images/fuji.png'
         
@@ -73,11 +76,13 @@ const shinobiApp = {
         this.decorations.push(new Decoration(this.ctx,'./images/tori.png',-700, 75, 450, 450))
         this.decorations.push(new Decoration(this.ctx,'./images/tori.png',-700, 75, 450, 450))
 
-
+        /******************************** PLAYER INSTANCE ******************************************/
         this.player = new Player(this.ctx, './images/player.png')
 
+        /********************************FIRST SPRITE INSTANCE *************************************/
         this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', -700, canvasH - 105, 100, 100))
      
+        /******************************** WIN & GAME OVER INSTANCES*********************************/
         this.gameOver = new Image
         this.gameOver.src = './images/continue.png'
         
@@ -85,12 +90,11 @@ const shinobiApp = {
         this.youWin.src = './images/final.png'
 
 
-       
+       /**************************************LET'S LISTEN TO OUR PLAYER****************************/
        this.setEventListeners()
        
+        /**************************************READY TO INIT OUR GAME? ;) LOOP!**********************/
        this.gameOn()
-        
-        //this.bull = new Bullet(this.ctx, './images/shuriken1.png', this.player.playerPos.x + this.player.playerSize.w, this.player.playerPos.y, 10, 10)
         
     },
 
@@ -99,23 +103,27 @@ const shinobiApp = {
         setInterval(() => {
             FRAMES++
             if (FRAMES > 10000) FRAMES = 0
-            this.manageMap()
+            
+            this.manageMap()                                                /****CREATE AND CLEAN MAP***/
 
-            this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
-            this.movementLoop()
-            this.drawLoop()
+            this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)  /*******CLEAN WINDOW********/
+           
+            this.movementLoop()                                             /*****MOVE ALL ELEMENTS*****/
+           
+            this.drawLoop()                                                 /*****DRAW ALL ELEMENTS*****/
             
         }, 30)
 
     },
 
-    manageMap(){
-            //Call instances for sprites and decoration close to the player 
+    manageMap() {
+        /**********************CALL INSTANCES FOR SPRITES AND DECORATION CLOSE TO THE PLAYER*************/
+
    if (this.mapX > -5 && this.mapFlag[0] === 0) {
   
     this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 750, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
     this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1100, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
-    this.sprites.push(new Sprite (this.ctx,'./images/transparent.png', 1250, 260, 675, 15 )) // plataforma árboles
+    this.sprites.push(new Sprite (this.ctx,'./images/transparent.png', 1250, 260, 675, 15 )) 
     this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1650, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
     
     this.decorations.push( new Decoration (this.ctx, './images/tree.png', 1230, 60, 450, 500))
@@ -127,7 +135,7 @@ const shinobiApp = {
 if (this.mapX > 1600 && this.mapFlag[1] === 0) {
     this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1100, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
     this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1400, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
-    this.sprites.push(new Sprite (this.ctx,'./images/transparent.png', 1550, 260, 945, 15 )) // plataforma tori
+    this.sprites.push(new Sprite (this.ctx,'./images/transparent.png', 1550, 260, 945, 15 )) 
 
     this.decorations.push(new Decoration (this.ctx, './images/tori.png', 1550, 250, 345, 270))
     this.decorations.push(new Decoration (this.ctx, './images/tori.png', 1895, 250, 345, 270))
@@ -139,7 +147,7 @@ if (this.mapX > 1600 && this.mapFlag[1] === 0) {
 if (this.mapX > 2400 && this.mapFlag[2] === 0) {
 
    this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 900, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
-   this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1900, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+   //this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1900, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
    this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1300, 120, this.basicEnemySize.w, this.basicEnemySize.h))
    this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1800, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
 
@@ -148,30 +156,24 @@ if (this.mapX > 2400 && this.mapFlag[2] === 0) {
 
 if (this.mapX > 3400 && this.mapFlag[3] === 0) {
     
-   this.sprites.push(new Enemy (this.ctx, './images/last-enemy.png', 900, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+   this.sprites.push(new Enemy (this.ctx, './images/last-enemy.png', 1000, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
    this.decorations.push( new Decoration (this.ctx, './images/wintori.png', 1300, 250, 345, 270))
 
    this.mapFlag[3] = 1
-} 
+}
+/*************************************CALCULATE POINTS, ENEMIES DEAD*************************/
+        
 this.points += this.sprites.filter((elm) => elm.retire === 1 && elm.constructor.name === "Enemy").length
-//Remove sprites and decoration far from the player 
+
+/*************************************CLEAN ELEMENTS, DEAD & OUT OF WINDOW RANGE***********/
 this.sprites.forEach ( elm => {
     if (elm.spritePos.x < -1600) {
         elm.retire = 1
     }
 })
-// this.decorations.forEach ( elm => {
-//     if (elm.decoPos.x < -1600) {
-//         elm.retire = 1
-//     }
-// })
+
 this.sprites = this.sprites.filter((elm) => elm.retire === 0)
 this.decorations = this.decorations.filter((elm) => elm.retire === 0)
-
-//Set new left limit
-// if (this.mapLeftLimit < this.mapX - 1600) {
-//    this.mapLeftLimit = this.mapX - 1600
-// }
 
 },
     
@@ -180,9 +182,12 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
             if ((this.player.playerPos.x + (this.player.playerSpeedX ) + this.player.playerSize.w > elm.spritePos.x ) // Left
                 && ((this.player.playerPos.x + (this.player.playerSpeedX) < elm.spritePos.x + elm.spriteSize.w)) // Right
                 && (this.player.playerPos.y + this.player.playerSize.h > elm.spritePos.y) // Up
-                && (this.player.playerPos.y < elm.spritePos.y + elm.spriteSize.h)) { // Right
+                && (this.player.playerPos.y < elm.spritePos.y + elm.spriteSize.h)) { // Down
                  
-                // If colision is detected and is from enemy => "game over", if is from obstacle => reposition player
+                /**************************COLISION DETECTED?**********************/
+                /************************* 1- FROM ENEMEY GAME OVER****************/
+                /***************** 2- FROM OBSTACLE, DIRECTION? => RESPOSITION ALL ELEMENTS****/
+                
                     if (this.player.playerPos.y + this.player.playerSize.h > elm.spritePos.y - 2 // Up
                     && this.player.playerPos.y < elm.spritePos.y + elm.spriteSize.h + 2) {
                         this.player.collidesX = 1
@@ -217,36 +222,36 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
                 if ((this.player.playerPos.x + this.player.playerSize.w > elm.spritePos.x ) // Left
                 && (this.player.playerPos.x < elm.spritePos.x + elm.spriteSize.w)) {
                     this.player.collidesY = 1
+
+                    /**************COLISION DETECTED, FROM ENEMY => DEAD ***********/
                     if (elm.fromEnemy === 1 || elm.constructor.name === 'Enemy') {
                         this.playerDead()
                         this.player.collidesY = 0
                     }
+                     /**************COLISION DETECTED, OBSTACLE => REPOSITION PLAYER ***********/
                     this.player.playerPos.y = elm.spritePos.y - this.player.playerSize.h - 2
+
+                    /**************CROUCHED DETECT, ADJUST POSITION ***********/
                     if  (this.player.isCrouched === 1) {
                         this.player.playerPos.y = elm.spritePos.y - this.player.playerSize.h + 30
-
-                        /****************************RETOCAR********************************* */
                     }
-                        
-                   
                 }
             }
+                    /*********************FLAG FOR JUMPING FROM SPRITES******************/
             if ((this.player.playerPos.y + this.player.playerSize.h < elm.spritePos.y + 5)
                 && (this.player.playerPos.y + this.player.playerSize.h > elm.spritePos.y)) {
                 this.player.onSprite = 1
-                //     if (this.player.isCrouched === 1)
-                //         this.player.playerPos.y = elm.spritePos.y - this.player.playerSize.h / 2 -2
-                // }
             }
             
         });
     },
     checkBulletsColision() {
     let count = 0
-    this.sprites.forEach((elm) => {
+    this.sprites.forEach((elm) => { /********************FOR EACH BULLET**************** */
         count++
         if (elm.isBullet === 1) {
             for (let i = count - 2; i >= 0; i--) {
+                        /***************************ALL COLISION LEFT DIR BULLETS *******************/
                 if (this.sprites[i].constructor.name !== 'Enemy' || elm.fromEnemy !== 1) {
                     if (elm.dirBullet === 1 && this.sprites[i].spritePos.x > elm.spritePos.x - 15
                         && this.sprites[i].spritePos.x < elm.spritePos.x + 15
@@ -254,17 +259,19 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
                         && this.sprites[i].spritePos.y + this.sprites[i].spriteSize.h > elm.spritePos.y) {
                     
                         elm.retire = 1
+                        /***************************COLISION WITH ENEMY *********************/
                         if (this.sprites[i].constructor.name === 'Enemy') {
                             this.sprites[i].retire = 1
                             this.sounds[2].play()
                         }
-                    }
+                    }   /***************************ALL COLISION RIGHT DIR BULLETS *******************/
                     else if (elm.dirBullet === - 1 && this.sprites[i].spritePos.x + this.sprites[i].spriteSize.w > elm.spritePos.x - 5
                         && this.sprites[i].spritePos.x < elm.spritePos.x + 5
                         && this.sprites[i].spritePos.y < elm.spritePos.y + elm.spriteSize.h
                         && this.sprites[i].spritePos.y + this.sprites[i].spriteSize.h > elm.spritePos.y){
                     
                         elm.retire = 1
+                        /***************************COLISION RIGHT WITH ENEMY *********************/
                         if (this.sprites[i].constructor.name === 'Enemy') {
                             this.sprites[i].retire = 1
                             this.sounds[2].play()
@@ -278,15 +285,16 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
     },
 
     movementLoop() {
-        // limites laterales
-        console.log(this.mapX, 'collidesX',this.player.collidesX, 'collidesY',this.player.collidesY )
+        
+        /*******************LATERAL LIMITS FOR PLAYER **********************/
         if ((this.player.playerDir === -1 && this.mapX >= this.mapLeftLimit + 200)
                 || (this.player.playerDir === 1 && this.mapX <= this.mapSize - this.player.playerSize.w - 20)){
             if(this.player.collidesX === 1) {
                 this.player.playerSpeedX = 0
                 this.player.collidesX = 0
             }
-            else {
+            /*******************ALL X MOVEMENT INSIDE LIMITS**********************/
+            else { 
                 this.decorations.forEach(elm => elm.move(this.player.playerSpeedX))
                 
                 this.sprites.forEach((elm, index) => {
@@ -303,10 +311,7 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
                 this.mapX += this.player.playerSpeedX
             }
         }
-
-      
-        
-        //limite suelo
+        /*******************FALL LIMITS FOR PLAYER **********************/
         if (this.player.playerPos.y + this.player.playerSpeedY > canvasH - this.floorY - this.player.playerSize.h ) {
             this.player.playerPos.y = canvasH - this.player.playerSize.h - this.floorY
             if  (this.player.isCrouched) {
@@ -316,36 +321,42 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
             this.player.playerSpeedY = 0
             this.player.onFloor = 1
         }
-        else {
+        else { // PLAYER ON SPRITE
             if (this.player.collidesY === 1) {
                 this.player.playerSpeedY = 0
                 this.player.collidesY = 0
                 this.player.onSprite = 1
             }
-            this.player.playerPos.y += this.player.playerSpeedY //movimiento vertical
+            this.player.playerPos.y += this.player.playerSpeedY // VERTICAL MOVEMENT
             this.checkColisionY()
 
         }
 
         if (!this.player.onFloor) {
-            this.player.playerSpeedY+= 1.5 //gravedad
+            this.player.playerSpeedY+= 1.5 // GRAVITY
         }
 
         
     },
 
     drawLoop() {
-        //background
+
+        /******************** BACKGROUND *********************/
+        
         this.ctx.drawImage(this.fuji, 0, 0)
         this.background.draw(this.mapX)
     
+        /******************** DECORATIONS  ********************/
         this.decorations.forEach(elm => elm.draw()) 
 
+        /********************** PLAYER ************************/
         this.player.draw()
 
+        /********************** SPRITES ************************/
+        this.sprites.forEach(elm => elm.draw()) 
 
-        this.sprites.forEach(elm => elm.draw(this.player.playerSize.w)) 
-
+        /********************** BULLETS ************************/
+        
         this.sprites.forEach(elm => {
             if (elm.constructor.name === 'Enemy' && FRAMES % 100 === 0) {
                 if(elm.enemyDir === 1)
@@ -356,7 +367,7 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
             }
         })
 
-        // MARCADOR 
+        /******************** SCOREBOARD *********************/  
         this.ctx.strokeStyle = 'red'
         this.ctx.lineWidth = 1
         this.ctx.font = 'Italic 20px Arabic'
@@ -366,7 +377,7 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
             this.ctx.strokeStyle = 'white'
         this.ctx.strokeText(` 1P    KILLS: ${this.points}     TIME: ${Math.round(FRAMES / 30)}`, this.canvasSize.w - 260, this.canvasSize.h - 567)
         
-        // GAME OVER SCREEN
+        /****************** GAME OVER SCREEN*****************/ 
         if (this.dead > 0)
         {
             this.ctx.drawImage(this.gameOver, this.canvasSize.w / 5, this.canvasSize.h / 5)
@@ -378,7 +389,7 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
             this.player.isDead = 1
         }
 
-        // PLAYER WIN SCREEN 
+        /****************** PLAYER WIN SCREEN*****************/ 
         if (this.mapX > 4300) {
             this.ctx.drawImage(this.youWin, this.canvasSize.w / 5, this.canvasSize.h / 5)
             this.player.playerPos.x = 50
@@ -388,6 +399,7 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
         }
     },
     attack() {
+        /*********************** SWORD ATTACK*************************/
         this.sprites.forEach((elm) => {
             if ((this.player.playerPos.x + (this.player.playerSpeedX ) + this.player.playerSize.w + 150 > elm.spritePos.x ) // Left
             && ((this.player.playerPos.x + (this.player.playerSpeedX) - 150 < elm.spritePos.x + elm.spriteSize.w)) // Right
@@ -401,6 +413,7 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
                 elm.retire = 1
             }
         })
+        /*********************** SHOOT ATTACK*************************/
         if (this.player.swordAttack === 0) {
             this.createBullet(1)
             this.sounds[1].play()
@@ -418,11 +431,14 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
         }
     },
     createBullet(fromWho, posx, posy, enemyDir) {
-        if(fromWho === 1){
+
+        /*******************FROM PLAYER***********************/
+        if(fromWho === 1){ 
             this.bull = new Bullet(this.ctx, './images/shuriken1.png', (this.player.playerPos.x + this.player.playerSize.w / 2 + this.player.playerDir * this.player.playerSize.w * 0.60), this.player.playerPos.y + this.player.playerSize.h / 4, 10, 10,)
             this.bull.dirBullet = this.player.playerDir
             this.sprites.push(this.bull)
         }
+        /*******************FROM ENEMY***********************/
         else{
             this.bull = new Bullet(this.ctx, './images/shuriken1.png', posx - 15, posy, 10, 10,)
             this.bull.dirBullet = -1
@@ -437,7 +453,6 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
     },
     setEventListeners() {
         document.onkeydown = e => {
-           // alert('entra down')
             e.keyCode === 37 ? this.player.move(-1, 5) : null
             e.keyCode === 39 ? this.player.move(+1, 5) : null
             if (e.keyCode === 32 && (this.player.onFloor || this.player.onSprite)) {

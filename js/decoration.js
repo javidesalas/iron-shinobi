@@ -20,11 +20,10 @@ class Decoration {
     }
     draw() {
         this.ctx.drawImage(this.decoImg, this.decoPos.x, this.decoPos.y,  this.decoSize.w , this.decoSize.h)
-        if(this.decoPos < -2* canvasW) this.retire = 1
+        if (this.decoPos < -2 * canvasW)
+            this.retire = 1
     }
-
     move(playerSpeedX) {
         this.decoPos.x -= playerSpeedX
     }
-   
 }

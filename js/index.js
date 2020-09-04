@@ -1,5 +1,3 @@
-// TODO: TESTEAND
-console.log(shinobiApp)
 
 window.onload = () => {
     document.onkeyup = e =>{

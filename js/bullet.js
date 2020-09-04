@@ -2,7 +2,7 @@ class Bullet extends Sprite {
     isBullet = 1
     dirBullet = 0
     fromEnemy = 0
-    draw(playerSizeW) {
+    draw() {
         if (this.dirBullet > 0) {
             this.ctx.drawImage(this.spriteImg, this.spritePos.x, this.spritePos.y,  this.spriteSize.w , this.spriteSize.h)
         }
