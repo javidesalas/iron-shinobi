@@ -56,8 +56,8 @@ const shinobiApp = {
         this.fuego = document.getElementById('fuego')
         this.fuego.play()
         this.music = document.getElementById('music')
-        //this.music.play()
-        //this.music.volume = 0.3
+        this.music.play()
+        this.music.volume = 0.3
 
         this.sounds.push(document.getElementById('jump'))
         this.sounds.push(document.getElementById('sword'))
@@ -77,10 +77,7 @@ const shinobiApp = {
         this.player = new Player(this.ctx, './images/player.png')
 
         this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', -700, canvasH - 105, 100, 100))
-       // this.sprites.push(new Sprite(this.ctx, './images/obstacle.png', 700, canvasH - 55, 50, 50))
-        
-        //this.sprites.push(new Enemy(this.ctx, './images/enemy.png', 400, canvasH - 155, 150, 150))
-       // this.manageMap()
+     
         this.gameOver = new Image
         this.gameOver.src = './images/continue.png'
         
@@ -116,10 +113,9 @@ const shinobiApp = {
             //Call instances for sprites and decoration close to the player 
    if (this.mapX > -5 && this.mapFlag[0] === 0) {
   
-    //this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 750, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+    this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 750, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
     this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1100, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
     this.sprites.push(new Sprite (this.ctx,'./images/transparent.png', 1250, 260, 675, 15 )) // plataforma árboles
-    //this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1400, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
     this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1650, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
     
     this.decorations.push( new Decoration (this.ctx, './images/tree.png', 1230, 60, 450, 500))
@@ -129,7 +125,7 @@ const shinobiApp = {
 }
 
 if (this.mapX > 1600 && this.mapFlag[1] === 0) {
-    //this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1100, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+    this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1100, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
     this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1400, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
     this.sprites.push(new Sprite (this.ctx,'./images/transparent.png', 1550, 260, 945, 15 )) // plataforma tori
 
@@ -142,9 +138,9 @@ if (this.mapX > 1600 && this.mapFlag[1] === 0) {
 
 if (this.mapX > 2400 && this.mapFlag[2] === 0) {
 
- //  this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 900, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
- //  this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1900, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
- //  this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1300, 120, this.basicEnemySize.w, this.basicEnemySize.h))
+   this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 900, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+   this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1900, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+   this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 1300, 120, this.basicEnemySize.w, this.basicEnemySize.h))
    this.sprites.push(new Sprite (this.ctx,'./images/obstacle.png', 1800, canvasH - this.basicObstacleSize.h - this.floorY, this.basicObstacleSize.w, this.basicObstacleSize.h ))
 
     this.mapFlag[2] = 1
@@ -152,7 +148,7 @@ if (this.mapX > 2400 && this.mapFlag[2] === 0) {
 
 if (this.mapX > 3400 && this.mapFlag[3] === 0) {
     
- //  this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 900, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+   this.sprites.push(new Enemy (this.ctx, './images/enemy.png', 900, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
    this.decorations.push( new Decoration (this.ctx, './images/wintori.png', 1300, 250, 345, 270))
 
    this.mapFlag[3] = 1
@@ -379,6 +375,7 @@ this.decorations = this.decorations.filter((elm) => elm.retire === 0)
             this.ctx.strokeText(`${Math.round(this.dead / 30)}`, this.canvasSize.w / 2 - 100, (this.canvasSize.h / 2) + 25)
             this.player.playerPos.x -= 5
             this.player.playerPos.y -= 2
+            this.player.isDead = 1
         }
 
         // PLAYER WIN SCREEN 

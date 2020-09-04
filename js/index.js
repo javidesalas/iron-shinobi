@@ -3,7 +3,10 @@ console.log(shinobiApp)
 
 window.onload = () => {
     document.onkeyup = e =>{
-        document.getElementById('gameCanvas').classList.remove('game')            
+       
+        document.querySelector('header').classList.add('vanish')
+        document.querySelector('body').classList.remove('pregame')           
+        document.getElementById('gameCanvas').classList.remove('game')   
         shinobiApp.init()
         startGame()
     }

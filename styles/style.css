@@ -7,10 +7,21 @@ body {
     align-content: center;
 }
 
-header {
+.header{
     text-align: center;
     margin-top: 50px;
+    transition: all 3s;
+    height: 100px
+    /* //transition-delay: 3s; */
+    }
+
+
+
+.header.vanish {
+   height: 0px;
+   margin: 0 auto;
 }
+
 
 .pregame {
   animation-duration: 3s;
@@ -23,7 +34,7 @@ header {
 
 @keyframes fire {
     from {
-        background: linear-gradient(#f29100, #580607) no-repeat #580607;
+        background: linear-gradient(#f29100 , #700607 40%, #221111) no-repeat #221111;
     }
     
     to {
@@ -53,6 +64,7 @@ header {
 .left img,
 .right img {
     width: 150px
+    
 }
 
 

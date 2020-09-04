@@ -17,6 +17,7 @@ class Player {
         this.onSprite = 1
         this.swordAttack = 0
         this.bulletAttack = 0
+        this.isDead = 0
         this.startAnim = 0
         this.collidesX = 0
         this.collidesY = 0
@@ -67,8 +68,11 @@ class Player {
      }
      selectLook() {
          let chosenLook = 100
+
+        if (this.isDead === 1)
+        chosenLook = 2700
          
-        if (this.swordAttack === 1) {
+        else if (this.swordAttack === 1) {
              chosenLook = 1300
              if (this.startAnim + 20 <= FRAMES) {
                  this.swordAttack = 0
