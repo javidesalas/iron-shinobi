@@ -7,6 +7,11 @@ body {
     align-content: center;
 }
 
+li {
+    list-style: none;
+    margin-bottom: 5px;
+}
+
 .header{
     text-align: center;
     margin-top: 50px;
@@ -67,7 +72,60 @@ body {
     
 }
 
+footer{
+    width: 900px;
+    margin: 0px auto;
+    display: flex;
+    justify-content: space-evenly;
+    transition: all 3s;
+}
 
+footer.vanish {
+   height: 0px;
+   margin: 0 auto;
+   display: none;
+}
+
+.footer {
+    height: 50px;
+    width: 300px;
+    display: flex;
+    justify-items: center;
+    align-content: center;
+    background-color: #f29100;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: rgb(49, 19, 19);
+    line-height: 1.2em;
+}
+
+
+.footer:hover {
+    position: relative;
+    
+}
+
+.footer span{
+    margin: auto auto;
+}
+
+.footer:hover span {
+    display: none
+}
+
+.footer div {
+    display: none;
+    background-color: #f29100;
+    width: 260px;
+    padding: 20px;
+
+}
+
+.footer:hover div {
+    position: absolute;
+    bottom: 5px;
+    display: inline-block;
+    
+}
 
 
 #audios {
