@@ -156,7 +156,7 @@ if (this.mapX > 2400 && this.mapFlag[2] === 0) {
 
 if (this.mapX > 3400 && this.mapFlag[3] === 0) {
     
-   this.sprites.push(new Enemy (this.ctx, './images/last-enemy.png', 1000, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
+   this.sprites.push(new Enemy (this.ctx, './images/last-enemy.png', 1300, canvasH - this.basicEnemySize.h - this.floorY, this.basicEnemySize.w, this.basicEnemySize.h))
    this.decorations.push( new Decoration (this.ctx, './images/wintori.png', 1300, 250, 345, 270))
 
    this.mapFlag[3] = 1
